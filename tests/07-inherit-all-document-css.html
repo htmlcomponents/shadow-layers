@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inherit All Document CSS</title>
+    <script src='./resources/testharness.js'></script>
+    <script src='./resources/testharnessreport.js'></script>
+</head>
+
+<body>
+    <style>
+        @layer BETTER-BUTTONS {
+            button {
+                padding: 1em;
+                border: thick dashed blue;
+            }
+        }
+    </style>
+    <custom-element>
+        <template shadowrootmode="open">
+            <style>
+                @layer buttons;
+
+                @layer buttons {
+                    button {
+                        padding: 1em;
+                        border: 1px solid #000;
+                    }
+                }
+            </style>
+            <button>custom element with " buttons " layer</button>
+        </template>
+    </custom-element>
+
+    <custom-element-with-attribute shadowlayers="buttons, inherit">
+        <template shadowrootmode="open">
+            <style>
+                @layer buttons;
+
+                @layer buttons {
+                    button {
+                        padding: 1em;
+                        border: 1px solid #000;
+                    }
+                }
+            </style>
+            <button>custom element with " buttons inherit " layers
+            </button>
+        </template>
+    </custom-element-with-attribute>
+
+    <custom-element-with-low-priority-inherit-layer shadowlayers="inherit, buttons">
+        <template shadowrootmode="open">
+            <style>
+                @layer buttons;
+
+                @layer buttons {
+                    button {
+                        padding: 1em;
+                        border: 1px solid #000;
+                    }
+                }
+            </style>
+            <button>custom element with " inherit buttons " layers
+            </button>
+        </template>
+    </custom-element-with-low-priority-inherit-layer>
+
+
+    <script type="module">
+        import ShadowLayers from '../ShadowLayers.js';
+
+        window.onload = function () {
+
+            const elName = "custom-element-with-attribute"
+            const newLayers = document.querySelector(elName).getAttribute("shadowlayers").split(", ")
+
+            const elNameLowPriority = "custom-element-with-low-priority-inherit-layer"
+            const newLayersLowPriority = document.querySelector(elNameLowPriority).getAttribute("shadowlayers").split(", ")
+
+
+            test(function () {
+
+                const inheritFromAttributeResult = ShadowLayers.inheritFromAttribute(document.querySelector(elName))
+                assert_true(inheritFromAttributeResult, "inheritFromAttribute() successfully returns");
+
+                const layerStatementResult = ShadowLayers.findLayerStatementRule(document.querySelector(elName))
+                assert_equals(typeof layerStatementResult, "object", "found, so returns object");
+
+                const layerStatementRule = layerStatementResult.styleSheet.cssRules.item(layerStatementResult.ruleIndex)
+                assert_array_equals(newLayers,
+                    layerStatementRule.nameList,
+                    "new @layer = buttons inherit");
+
+            }, "Inherit 'buttons inherit' layers from attribute");
+
+            test(function () {
+
+                const inheritFromAttributeResult = ShadowLayers.inheritFromAttribute(document.querySelector(elNameLowPriority))
+                assert_true(inheritFromAttributeResult, "inheritFromAttribute() successfully returns");
+
+                const layerStatementResult = ShadowLayers.findLayerStatementRule(document.querySelector(elNameLowPriority))
+                assert_equals(typeof layerStatementResult, "object", "found, so returns object");
+
+                const layerStatementRule = layerStatementResult.styleSheet.cssRules.item(layerStatementResult.ruleIndex)
+                assert_array_equals(newLayersLowPriority,
+                    layerStatementRule.nameList,
+                    "new @layer = inherit buttons");
+
+            }, "Inherit 'inherit buttons ' layers from attribute");
+
+        }
+    </script>
+
+    <div id="log"></div>
+
+</body>
+
+</html>

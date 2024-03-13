@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Insert Rule Layer</title>
+    <script src='./resources/testharness.js'></script>
+    <script src='./resources/testharnessreport.js'></script>
+</head>
+
+<body>
+    <custom-element>
+        <template shadowrootmode="open">
+            <style>
+                button {
+                    padding: 1em;
+                }
+            </style>
+            <button>custom element</button>
+        </template>
+    </custom-element>
+
+    <custom-element-with-inherited-reset-layer>
+        <template shadowrootmode="open">
+            <style>
+                @layer reset, base;
+            </style>
+            <button>custom element with inserted reset layer</button>
+        </template>
+    </custom-element-with-inherited-reset-layer>
+
+    <custom-element-with-inherited-then-deleted-reset-layer>
+        <template shadowrootmode="open">
+            <style>
+                @layer reset, base;
+            </style>
+            <button>custom element with inserted then deleted reset layer</button>
+        </template>
+    </custom-element-with-inherited-then-deleted-reset-layer>
+
+    <script type="module">
+        import ShadowLayers from '../ShadowLayers.js';
+
+        window.onload = function () {
+
+            const newRule = `@layer reset {
+      button {
+          padding: 1em;
+          border-radius: 1em;
+          border: thick dashed blue;
+      }
+  }`
+            const elName = "custom-element-with-inherited-reset-layer"
+            const elNameWithDelete = "custom-element-with-inherited-then-deleted-reset-layer"
+
+            test(function () {
+
+                const findReset = ShadowLayers.findLayerBlockRule(document.querySelector(elName), "reset")
+                assert_equals(findReset, -1, "No reset layer found, so returns -1");
+                const insertResult = ShadowLayers.insertRule(document.querySelector(elName), newRule)
+                assert_equals(insertResult, true, "insertLayer() succeeded");
+                const findResetAfterInsert = ShadowLayers.findLayerBlockRule(document.querySelector(elName), "reset")
+                assert_equals(typeof findResetAfterInsert, "object", "found, so returns object");
+
+            }, `Insert reset layer into <${elName}>`);
+
+
+            test(function () {
+
+                const findReset = ShadowLayers.findLayerBlockRule(document.querySelector(elNameWithDelete), "reset")
+                assert_equals(findReset, -1, "No reset layer found, so returns -1");
+                const insertResult = ShadowLayers.insertRule(document.querySelector(elNameWithDelete), newRule)
+                assert_equals(insertResult, true, "insertLayer() succeeded");
+                const findResetAfterInsert = ShadowLayers.findLayerBlockRule(document.querySelector(elNameWithDelete), "reset")
+                assert_equals(typeof findResetAfterInsert, "object", "found, so returns object");
+
+                const deleteResult = ShadowLayers.deleteLayer(document.querySelector(elNameWithDelete), "reset")
+                assert_equals(deleteResult, true, "deleteLayer() succeeded");
+                const findDeletedResult = ShadowLayers.findLayerBlockRule(document.querySelector(elNameWithDelete), "reset")
+                assert_equals(findDeletedResult, -1, "Deleted reset layer not found, so returns -1");
+
+            }, "Insert reset layer into ${elNameWithDelete} then delete");
+        }
+    </script>
+
+    <div id="log"></div>
+
+</body>
+
+</html>

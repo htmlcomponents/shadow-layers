@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Find Layer Statement Rule</title>
+    <script src='./resources/testharness.js'></script>
+    <script src='./resources/testharnessreport.js'></script>
+</head>
+
+<body>
+    <custom-element>
+        <template shadowrootmode="open">
+            <style>
+                button {
+                    padding: 1em;
+                }
+            </style>
+            <button>custom element</button>
+        </template>
+    </custom-element>
+
+    <custom-element-with-layer-statement-rule>
+        <template shadowrootmode="open">
+            <style>
+                @layer reset, base;
+
+                @layer reset {
+                    button {
+                        padding: 1em;
+                        border-radius: 1em;
+                        border: thick dashed blue;
+                    }
+                }
+            </style>
+            <button>custom element with layer statement rule</button>
+        </template>
+    </custom-element-with-layer-statement-rule>
+
+    <script type="module">
+        import ShadowLayers from '../ShadowLayers.js';
+        window.onload = function () {
+            test(function () {
+                const result = ShadowLayers.findLayerStatementRule(document.querySelector("custom-element"))
+                assert_equals(result, -1, "layer statement rule not found, so returns -1");
+            }, "<custom-element> has no layer layer statement rule");
+
+            test(function () {
+                const resultWithLayerStatement = ShadowLayers.findLayerStatementRule(document.querySelector("custom-element-with-layer-statement-rule"))
+                assert_equals(typeof resultWithLayerStatement, "object", "found, so returns object");
+
+                const layerStatementRule = resultWithLayerStatement.styleSheet.cssRules.item(resultWithLayerStatement.ruleIndex)
+                assert_in_array("reset",
+                    layerStatementRule.nameList,
+                    "layer statement rule has 'reset' in nameList");
+
+            }, "<custom-element-with-layer-statement-rule> has layer statement rule");
+        }
+    </script>
+
+    <div id="log"></div>
+
+</body>
+
+</html>

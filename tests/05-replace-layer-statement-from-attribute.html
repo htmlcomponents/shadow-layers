@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attribute Replace Layer Statement Rule</title>
+    <script src='./resources/testharness.js'></script>
+    <script src='./resources/testharnessreport.js'></script>
+</head>
+
+<body>
+    <custom-element>
+        <template shadowrootmode="open">
+            <style>
+                @layer reset, BETTER-BUTTONS, buttons;
+
+                @layer buttons {
+                    button {
+                        padding: 1em;
+                        border: 1px solid #000;
+                    }
+                }
+
+                @layer BETTER-BUTTONS {
+                    button {
+                        padding: 1em;
+                        border: thick dashed blue;
+                    }
+                }
+            </style>
+            <button>custom element with " BETTER-BUTTONS buttons " layer priority</button>
+        </template>
+    </custom-element>
+
+    <custom-element-with-replaced-statement-rule shadowlayers="reset, buttons, BETTER-BUTTONS">
+        <template shadowrootmode="open">
+            <style>
+                @layer reset, BETTER-BUTTONS, buttons;
+
+                @layer buttons {
+                    button {
+                        padding: 1em;
+                        border: 1px solid #000;
+                    }
+                }
+
+                @layer BETTER-BUTTONS {
+                    button {
+                        padding: 1em;
+                        border: thick dashed blue;
+                    }
+                }
+            </style>
+            <button>custom element with " buttons BETTER-BUTTONS " layer priority
+            </button>
+        </template>
+    </custom-element-with-replaced-statement-rule>
+
+
+    <script type="module">
+        import ShadowLayers from '../ShadowLayers.js';
+
+        window.onload = function () {
+
+            const elName = "custom-element-with-replaced-statement-rule"
+            const originalLayers = ["reset", "BETTER-BUTTONS", "buttons"]
+            // const newLayers = ["reset", "buttons", "BETTER-BUTTONS"]
+            const newLayers = document.querySelector(elName).getAttribute("shadowlayers").split(", ")
+
+            test(function () {
+
+                const resultWithLayerStatement = ShadowLayers.findLayerStatementRule(document.querySelector(elName))
+                assert_equals(typeof resultWithLayerStatement, "object", "found, so returns object");
+
+                const layerStatementRule = resultWithLayerStatement.styleSheet.cssRules.item(resultWithLayerStatement.ruleIndex)
+                assert_array_equals(originalLayers,
+                    layerStatementRule.nameList,
+                    "original layers = reset BETTER-BUTTONS buttons");
+
+                const replaceResult = ShadowLayers.replaceLayerStatementRule(document.querySelector(elName), newLayers)
+                assert_true(replaceResult, "replaced layer statement rule");
+
+                const newLayerStatemenResult = ShadowLayers.findLayerStatementRule(document.querySelector(elName))
+                assert_equals(typeof newLayerStatemenResult, "object", "found, so returns object");
+
+                const newLayerStatementRule = newLayerStatemenResult.styleSheet.cssRules.item(newLayerStatemenResult.ruleIndex)
+                assert_array_equals(newLayers,
+                    newLayerStatementRule.nameList,
+                    "new layers = reset buttons BETTER-BUTTONS");
+
+            }, `Replace layers 'reset BETTER-BUTTONS buttons' from attribute shadowlayers='reset buttons BETTER-BUTTONS'`);
+
+        }
+    </script>
+
+    <div id="log"></div>
+
+</body>
+
+</html>

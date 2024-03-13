@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Find Layer Block Rule</title>
+    <script src='./resources/testharness.js'></script>
+    <script src='./resources/testharnessreport.js'></script>
+</head>
+
+<body>
+    <custom-element>
+        <template shadowrootmode="open">
+            <style>
+                button {
+                    padding: 1em;
+                }
+            </style>
+            <button>custom element</button>
+        </template>
+    </custom-element>
+
+    <custom-element-with-reset-layer>
+        <template shadowrootmode="open">
+            <style>
+                @layer reset, base;
+
+                @layer reset {
+                    button {
+                        padding: 1em;
+                        border-radius: 1em;
+                        border: thick dashed blue;
+                    }
+                }
+            </style>
+            <button>custom element with reset layer</button>
+        </template>
+    </custom-element-with-reset-layer>
+
+    <script type="module">
+        import ShadowLayers from '../ShadowLayers.js';
+
+        window.onload = function () {
+            test(function () {
+                const result = ShadowLayers.findLayerBlockRule(document.querySelector("custom-element"), "reset")
+                assert_equals(result, -1, "No layer found, so returns -1");
+            }, "<custom-element> has no layer named 'reset'");
+
+            test(function () {
+                const resultWithResetLayer = ShadowLayers.findLayerBlockRule(document.querySelector("custom-element-with-reset-layer"), "reset")
+                assert_equals(typeof resultWithResetLayer, "object", "found, so returns object");
+            }, "<custom-element-with-reset-layer> has layer named 'reset'");
+        }
+    </script>
+
+    <div id="log"></div>
+
+</body>
+
+</html>

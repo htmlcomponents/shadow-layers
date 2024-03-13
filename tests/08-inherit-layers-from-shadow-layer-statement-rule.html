@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inherit Shadow @layer</title>
+    <script src='./resources/testharness.js'></script>
+    <script src='./resources/testharnessreport.js'></script>
+</head>
+
+<body>
+    <style>
+        @layer BETTER-BUTTONS {
+            button {
+                padding: 1em;
+                border: thick dashed blue;
+            }
+        }
+    </style>
+    <custom-element>
+        <template shadowrootmode="open">
+            <style>
+                @layer buttons;
+
+                @layer buttons {
+                    button {
+                        padding: 1em;
+                        border: 1px solid #000;
+                    }
+                }
+            </style>
+            <button>custom element with " buttons " layer</button>
+        </template>
+    </custom-element>
+
+    <custom-element-with-shadow-layer-statement-rule>
+        <template shadowrootmode="open">
+            <style>
+                @layer buttons, inherit.BETTER-BUTTONS;
+
+                @layer buttons {
+                    button {
+                        padding: 1em;
+                        border: 1px solid #000;
+                    }
+                }
+            </style>
+            <button>custom element with " buttons inherit.BETTER-BUTTONS " shadow @layer statement rule
+            </button>
+        </template>
+    </custom-element-with-shadow-layer-statement-rule>
+
+
+    <script type="module">
+        import ShadowLayers from '../ShadowLayers.js';
+
+        window.onload = function () {
+
+            const elName = "custom-element-with-shadow-layer-statement-rule"
+
+            test(function () {
+
+                const inheritResult = ShadowLayers.inheritFromShadowStatementRule(document.querySelector(elName))
+                assert_true(inheritResult, "inherit successfully returns");
+
+                const layerStatementResult = ShadowLayers.findLayerStatementRule(document.querySelector(elName))
+                assert_equals(typeof layerStatementResult, "object", "found, so returns object");
+
+                const layerStatementRule = layerStatementResult.styleSheet.cssRules.item(layerStatementResult.ruleIndex)
+                assert_array_equals(["buttons", "inherit.BETTER-BUTTONS"],
+                    layerStatementRule.nameList,
+                    "@layer buttons, inherit.BETTER-BUTTONS");
+
+            }, "Inherit 'buttons inherit.BETTER-BUTTONS' from shadow @layer statement rule");
+
+        }
+    </script>
+
+    <div id="log"></div>
+
+</body>
+
+</html>
