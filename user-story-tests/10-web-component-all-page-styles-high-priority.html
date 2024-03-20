@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web component all page styles high priority</title>
+    <script src='./resources/testharness.js'></script>
+    <script src='./resources/testharnessreport.js'></script>
+</head>
+
+<body>
+
+    <script type="module">
+        import { WebComponentAllPageStylesHighPriority } from "./components/WebComponentAllPageStylesHighPriority.js";
+        customElements.define(
+            "web-component-all-page-styles-high-priority",
+            WebComponentAllPageStylesHighPriority
+        );
+    </script>
+    <style>
+        @layer resets {
+            button {
+                border: thick dashed red;
+            }
+        }
+    </style>
+    <button>Button outside a shadow tree</button>
+    <web-component-all-page-styles-high-priority>
+    </web-component-all-page-styles-high-priority>
+
+    <script type="module">
+        import ShadowLayers from '../ShadowLayers.js';
+
+        window.onload = function () {
+
+            const elName = "web-component-all-page-styles-high-priority"
+
+            test(function () {
+
+                const inheritResult = ShadowLayers.inheritFromShadowStatementRule(document.querySelector(elName))
+                assert_true(inheritResult, "inherit found, so returns true");
+            }, "Web component all page styles high priority");
+
+        }
+    </script>
+
+    <div id="log"></div>
+
+</body>
+
+</html>

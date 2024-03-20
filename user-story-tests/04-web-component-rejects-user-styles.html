@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web component rejects user styles</title>
+    <script src='./resources/testharness.js'></script>
+    <script src='./resources/testharnessreport.js'></script>
+</head>
+
+<body>
+
+    <script type="module">
+        import { WebComponentRejectsUserStyles } from "./components/WebComponentRejectsUserStyles.js";
+        customElements.define(
+            "web-component-rejects-user-styles",
+            WebComponentRejectsUserStyles
+        );
+    </script>
+    <style>
+        @layer resets {
+            button {
+                border: thick dashed red;
+            }
+        }
+    </style>
+    <web-component-rejects-user-styles>
+        <template shadowrootmode="open">
+            <style>
+                @layer inherit.resets;
+            </style>
+        </template>
+    </web-component-rejects-user-styles>
+
+    <script type="module">
+        import ShadowLayers from '../ShadowLayers.js';
+
+        window.onload = function () {
+
+            const elName = "web-component-rejects-user-styles"
+
+            test(function () {
+
+                const inheritResult = ShadowLayers.inheritFromShadowStatementRule(document.querySelector(elName))
+                assert_false(inheritResult, "inherit not found, so returns false");
+
+            }, "Web component rejects user styles");
+
+        }
+    </script>
+
+    <div id="log"></div>
+
+</body>
+
+</html>
