@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interweave priorities of outer and inner context layers</title>
+    <script src='./resources/testharness.js'></script>
+    <script src='./resources/testharnessreport.js'></script>
+</head>
+
+<body>
+
+    <style>
+        @layer A {
+            button.a {
+                border: thick dashed red;
+            }
+        }
+
+        @layer B {
+            button.b {
+                border: thick solid blue;
+            }
+        }
+    </style>
+    <button>Button outside a shadow tree</button>
+    <button-group>
+        <template shadowrootmode="open">
+            <style>
+                @layer inherit.A.as.outerA, inherit.B.as.outerB, outerA, A, B, outerB;
+
+                @layer A {
+                    button.a {
+                        border: thin dashed red;
+                    }
+                }
+
+                @layer B {
+                    button.b {
+                        border: thin solid blue;
+                    }
+                }
+            </style>
+            <button class="a">Button a (inner has priority, thin dashed red)</button>
+            <button class="b">Button b (outer has priority, thick solid blue)</button>
+        </template>
+    </button-group>
+
+    <script type="module">
+        import ShadowLayers from '../ShadowLayers.js';
+
+        window.onload = function () {
+
+            const elName = "button-group"
+
+            test(function () {
+
+                const inheritResult = ShadowLayers.inheritFromShadowStatementRule(document.querySelector(elName))
+                assert_true(inheritResult, "inherit found, so returns true");
+            }, "Interweave priorities of outer and inner context layers");
+
+        }
+    </script>
+
+    <div id="log"></div>
+
+</body>
+
+</html>

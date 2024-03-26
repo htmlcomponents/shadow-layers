@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inherit unlayered page styles as higher priority layer</title>
+    <script src='./resources/testharness.js'></script>
+    <script src='./resources/testharnessreport.js'></script>
+</head>
+
+<body>
+
+    <style>
+        button {
+            border: thick solid black;
+        }
+
+        @layer buttons {
+            button {
+                border: thick dashed yellow;
+            }
+        }
+    </style>
+    <button>Button outside a shadow tree</button>
+    <button-group>
+        <template shadowrootmode="open">
+            <style>
+                @layer inherit.unlayered.as.unlayered, shadowstyles, unlayered;
+
+                @layer shadowstyles {
+                    button {
+                        border: thick dashed red;
+                    }
+                }
+            </style>
+            <button>
+                Button inside a shadow tree (thick solid black) (styled from unlayered
+                page styles)
+            </button>
+        </template>
+    </button-group>
+
+    <script type="module">
+        import ShadowLayers from '../ShadowLayers.js';
+
+        window.onload = function () {
+
+            const elName = "button-group"
+
+            test(function () {
+
+                const inheritResult = ShadowLayers.inheritFromShadowStatementRule(document.querySelector(elName))
+                assert_true(inheritResult, "inherit found, so returns true");
+            }, "Inherit unlayered page styles as higher priority layer");
+
+        }
+    </script>
+
+    <div id="log"></div>
+
+</body>
+
+</html>

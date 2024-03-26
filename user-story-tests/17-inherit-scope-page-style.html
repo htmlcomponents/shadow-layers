@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inherit @scope page style</title>
+    <script src='./resources/testharness.js'></script>
+    <script src='./resources/testharnessreport.js'></script>
+</head>
+
+<body>
+    <style>
+        @layer card-container {
+            @scope (section) to (article) {
+                header {
+                    border: thick dashed red;
+                }
+            }
+        }
+    </style>
+    <card-container>
+        <template shadowrootmode="open">
+            <style>
+                @layer inherit.card-container.as.outer-card-container, card-container, outer-card-container;
+
+                @layer card-container {
+                    @scope (section) to (article) {
+                        header {
+                            border: thick solid black;
+                        }
+                    }
+                }
+            </style>
+            <section>
+                <header>Card Header (thick red dashed) (from outer-card-container)</header>
+                <article class="content">
+                    <header>Content Header</header>
+                    <div>Content</div>
+                </article>
+            </section>
+
+        </template>
+    </card-container>
+
+    <script type="module">
+        import ShadowLayers from '../ShadowLayers.js';
+
+        window.onload = function () {
+
+            const elName = "card-container"
+
+            test(function () {
+
+                const inheritResult = ShadowLayers.inheritFromShadowStatementRule(document.querySelector(elName))
+                assert_true(inheritResult, "inherit found, so returns true");
+            }, "Inherit @scope page style");
+
+        }
+    </script>
+
+    <div id="log"></div>
+
+</body>
+
+</html>

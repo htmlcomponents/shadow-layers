@@ -328,3 +328,539 @@ As a web component author I want to bring in all page styles at a high priority 
 ```
 
 </details>
+
+<details>
+<summary>11 Designer or author provided template</summary>
+
+As a shadow tree designer or web component author, I want to provide users a default template of CSS and/or HTML so that users can knowledgeably bring in page styles.
+
+```html
+<body>
+  <style>
+    @layer shadowbuttons {
+      :host(button-group) button {
+        border: thick dashed red;
+      }
+    }
+  </style>
+  <button>Button outside a shadow tree</button>
+  <button-group>
+    <template shadowrootmode="open">
+      <style>
+        @layer buttons, inherit.shadowbuttons;
+
+        @layer buttons {
+          button {
+            border: thick solid black;
+          }
+        }
+      </style>
+      <button>Button inside a shadow tree</button>
+      <button>Button inside a shadow tree</button>
+    </template>
+  </button-group>
+</body>
+```
+
+</details>
+
+<details>
+<summary>12 Revert to parent shadow tree</summary>
+
+As a shadow tree user, I want to bring in styles from a parent shadow tree so that shadow trees that are children of shadow trees will have styles consistent with the parent shadow trees.
+
+(currently unimplemented in shadow layers proposal)
+
+CSS:
+
+```css
+@layer buttons, revert.parentshadowbuttons;
+```
+
+Example:
+
+```html
+<body>
+  <button>Button outside a shadow tree</button>
+  <button-group>
+    <template shadowrootmode="open">
+        <style>
+            @layer parentshadowbuttons {
+                :host(button-group) button {
+                    border: thick dashed red;
+                }
+            }
+        </style>
+        <button-item>
+            <template shadowrootmode="open">
+                <style>
+                    @layer buttons, revert.parentshadowbuttons;
+                    @layer buttons {
+                        button {
+                            border: thick solid black; }
+                    }
+                </style>
+                <button>button-item inside button-group<button-item>
+            </template>
+        </button-item>
+    </template>
+  </button-group>
+</body>
+```
+
+</details>
+
+<details>
+<summary>13 Polyfillable</summary>
+
+As a web author, shadow tree designer or user, or web component author or user I want any solution for bringing in page styles to shadow trees to be polyfillable, so that I can evaluate, test, adopt and deploy it in a timely matter. This seems particularly important for an HTML-parser level feature.
+
+See the user-story-tests folder in the shadow layers proposal [repository](https://github.com/htmlcomponents/shadow-layers).
+
+</details>
+
+<details>
+<summary>14 Inherit resets layer as higher priority renamed layer</summary>
+
+As a web page author I want to bring in my resets layer as a renamed layer so that it can have higher priority than the shadow tree's own reset layer.
+
+```html
+<body>
+  <style>
+    @layer resets {
+      button {
+        border: thick dashed red;
+      }
+    }
+  </style>
+  <button>Button outside a shadow tree</button>
+  <button-group>
+    <template shadowrootmode="open">
+      <style>
+        @layer resets, inherit.resets.as.shadowresets, shadowresets;
+
+        @layer resets {
+          button {
+            border: thick solid black;
+          }
+        }
+      </style>
+      <button>Button inside a shadow tree</button>
+    </template>
+  </button-group>
+</body>
+```
+
+</details>
+
+<details>
+<summary>15 Inherit resets layer as lower priority renamed layer</summary>
+
+As a web page author I want to bring in my resets layer as a renamed layer so that it can have lower priority than the shadow tree's own reset layer.
+
+CSS:
+
+```css
+@layer inherit.resets.as.shadowresets, shadowresets, resets;
+```
+
+Example:
+
+```html
+<body>
+  <style>
+    @layer resets {
+      button {
+        border: thick dashed red;
+      }
+    }
+  </style>
+  <button>Button outside a shadow tree</button>
+  <button-group>
+    <template shadowrootmode="open">
+      <style>
+        @layer inherit.resets.as.shadowresets, shadowresets, resets;
+
+        @layer resets {
+          button {
+            border: thick solid black;
+          }
+        }
+      </style>
+      <button>Button inside a shadow tree</button>
+    </template>
+  </button-group>
+</body>
+```
+
+</details>
+
+<details>
+<summary>16 Interweave priorities of outer and inner context layers</summary>
+
+As a web page author I want to interweave priorities of outer and inner context layers so some have lower priority of a shadow tree layer and some have higher priority of a shadow tree layer.
+
+CSS:
+
+```css
+@layer inherit.A.as.outerA, inherit.B.as.outerB, outerA, A, B, outerB;
+```
+
+Example:
+
+```html
+<body>
+  <style>
+    @layer A {
+      button.a {
+        border: thick dashed red;
+      }
+    }
+    @layer B {
+      button.b {
+        border: thick solid blue;
+      }
+    }
+  </style>
+  <button>Button outside a shadow tree</button>
+  <button-group>
+    <template shadowrootmode="open">
+      <style>
+        @layer inherit.A.as.outerA, inherit.B.as.outerB, outerA, A, B, outerB;
+
+        @layer A {
+          button.a {
+            border: thin dashed red;
+          }
+        }
+        @layer B {
+          button.b {
+            border: thin solid blue;
+          }
+        }
+      </style>
+      <button class="a">Button a (inner has priority, thin dashed red)</button>
+      <button class="b">Button b (outer has priority, thick solid blue)</button>
+    </template>
+  </button-group>
+</body>
+```
+
+</details>
+
+<details>
+<summary>17 Inherit @scope page style</summary>
+
+As a declarative shadow tree or web component user, I want to bring into a shadow tree a page style that includes an @scope rule in a layer, so that I can give the outer context @scope rule priority over an inner content @scope rule.
+
+```html
+<body>
+  <style>
+    @layer card-container {
+      @scope (section) to (article) {
+        header {
+          border: thick dashed red;
+        }
+      }
+    }
+  </style>
+  <card-container>
+    <template shadowrootmode="open">
+      <style>
+        @layer inherit.card-container.as.outer-card-container, card-container, outer-card-container;
+
+        @layer card-container {
+          @scope (section) to (article) {
+            header {
+              border: thick solid black;
+            }
+          }
+        }
+      </style>
+      <section>
+        <header>
+          Card Header (thick red dashed) (from outer-card-container)
+        </header>
+        <article class="content">
+          <header>Content Header</header>
+          <div>Content</div>
+        </article>
+      </section>
+    </template>
+  </card-container>
+</body>
+```
+
+</details>
+
+<details>
+<summary>18 Inherit named @sheet as layer</summary>
+
+As a declarative shadow tree or web component user, I want to bring into a shadow tree a page style that includes an @sheet in a layer, so that I can give the outer context @sheet priority over an inner content styles.
+
+[At-rule support detection in @supports](https://www.bram.us/2022/01/20/detect-at-rule-support-with-the-at-rule-function/) is not available, so @sheet would not be polyfillable [Multiple stylesheets per file #5629](https://github.com/w3c/csswg-drafts/issues/5629), so the POC does not implement @sheet. However, @layer is widely deployed so polyfillability is not needed for it, and @layer also provides the essential priority mechanism.
+
+Nonetheless, an @sheet supporting syntax would be possible:
+
+```css
+//Inherit named sheet as layer
+@layer inherit.sheet.mysheet.as.mysheet, mysheet;
+```
+
+</details>
+
+<details>
+<summary>19 Inherit unlayered page styles as lower priority layer</summary>
+
+As a user or author of a declarative shadow tree or web component I want to bring in unlayered page styles into a shadow tree so that the outer context unlayered page styles will have lower priority than the shadow tree styles.
+
+In CSS:
+
+```css
+@layer inherit.unlayered.as.unlayered, unlayered, shadowstyles;
+```
+
+Example:
+
+```html
+<body>
+  <style>
+    button {
+      border: thick solid black;
+    }
+  </style>
+  <button>Button outside a shadow tree</button>
+  <button-group>
+    <template shadowrootmode="open">
+      <style>
+        @layer inherit.unlayered.as.unlayered, unlayered, shadowstyles;
+
+        @layer shadowstyles {
+          button {
+            border: thick dashed red;
+          }
+        }
+      </style>
+      <button>
+        Button inside a shadow tree (thick dashed red) (styled from
+        shadowstyles)
+      </button>
+    </template>
+  </button-group>
+</body>
+```
+
+</details>
+
+<details>
+<summary>20 Inherit unlayered page styles as higher priority layer</summary>
+
+As a user or author of a declarative shadow tree or web component I want to bring in unlayered page styles into a shadow tree so that the outer context unlayered page styles will have higher priority than the shadow tree styles.
+
+In CSS:
+
+```css
+@layer inherit.unlayered.as.unlayered, unlayered, shadowstyles;
+```
+
+Example:
+
+```html
+<body>
+  <style>
+    button {
+      border: thick solid black;
+    }
+
+    @layer buttons {
+      button {
+        border: thick dashed yellow;
+      }
+    }
+  </style>
+  <button>Button outside a shadow tree</button>
+  <button-group>
+    <template shadowrootmode="open">
+      <style>
+        @layer inherit.unlayered.as.unlayered, shadowstyles, unlayered;
+
+        @layer shadowstyles {
+          button {
+            border: thick dashed red;
+          }
+        }
+      </style>
+      <button>
+        Button inside a shadow tree (thick solid black) (styled from unlayered
+        page styles)
+      </button>
+    </template>
+  </button-group>
+</body>
+```
+
+</details>
+
+<details>
+<summary>21 Interweave priorities of outer layered and unlayered styles</summary>
+
+As a user or author of a declarative shadow tree or web component I want to bring in both layered unlayered page styles into a shadow tree, so that the outer context layered and unlayered page styles can interweave with the shadow tree styles.
+
+In CSS:
+
+```css
+@layer inherit.layered.as.layered, inherit.unlayered.as.unlayered, layered, shadowstyles, unlayered;
+```
+
+Example:
+
+```html
+<body>
+  <style>
+    button {
+      border: thick solid black;
+    }
+
+    @layer buttons {
+      button {
+        border: thick dashed yellow;
+      }
+    }
+  </style>
+  <button>Button outside a shadow tree</button>
+  <button-group>
+    <template shadowrootmode="open">
+      <style>
+        @layer inherit.layered.as.layered, inherit.unlayered.as.unlayered, layered, shadowstyles, unlayered;
+        @layer shadowstyles {
+          button {
+            border: thick dashed red;
+          }
+        }
+      </style>
+      <button>
+        Button inside a shadow tree (thick solid black) (styled from unlayered
+        page styles)
+      </button>
+    </template>
+  </button-group>
+</body>
+```
+
+</details>
+
+<details>
+<summary>22 Inherit all outer page styles</summary>
+
+As a user or author of a declarative shadow tree or web component I want to bring in both layered unlayered page styles into a shadow tree, so that the outer context unlayered styles have priority over outer context layered styles.
+
+In CSS:
+
+```css
+@layer inherit.unlayered.as.unlayered, inherit.unlayered.as.unlayered, layered, unlayered;
+```
+
+Example:
+
+```html
+<body>
+  <style>
+    button {
+      border: thick solid black;
+    }
+
+    @layer buttons {
+      button {
+        border: thick dashed yellow;
+      }
+    }
+  </style>
+  <button>Button outside a shadow tree</button>
+  <button-group>
+    <template shadowrootmode="open">
+      <style>
+        @layer inherit.layered.as.layered, inherit.unlayered.as.unlayered, layered, unlayered;
+      </style>
+      <button>
+        Button inside a shadow tree (thick solid black) (styled from unlayered
+        page styles)
+      </button>
+    </template>
+  </button-group>
+</body>
+```
+
+</details>
+
+<details>
+<summary>23 Pass through from design system</summary>
+
+As a user of a design system and a web component or declarative shadow tree, neither of which I control the styles, I want to pass CSS framework styles into the web component or declarative shadow tree, so that the web component or declarative shadow tree can be styled consistent with the CSS framework.
+
+Example:
+
+```html
+<body>
+  <style>
+    button {
+      border: thick solid black;
+    }
+
+    @layer design-system {
+      button {
+        border: thick dashed red;
+      }
+    }
+  </style>
+  <button>Button outside a shadow tree</button>
+  <button-group>
+    <template shadowrootmode="open">
+      <style>
+        @layer inherit.design-system.as.design-system, design-system;
+      </style>
+      <button>
+        Button inside a shadow tree (thick dashed red) (styled from design
+        system layer)
+      </button>
+    </template>
+  </button-group>
+</body>
+```
+
+</details>
+
+<details>
+<summary>24 Pass through from layered CSS framework</summary>
+
+As a user of a layer-aware [low-priority CSS framework](https://github.com/w3c/csswg-drafts/issues/6284#issuecomment-1006946621) and a web component or declarative shadow tree, neither of which I control the styles, I want to pass CSS framework styles into the web component or declarative shadow tree, so that the web component or declarative shadow tree can be styled consistent with the CSS framework.
+
+Example:
+
+```html
+<body>
+  <style>
+    @layer css-framework {
+      button {
+        border: thick dashed red;
+      }
+    }
+    button {
+      border: thick solid black;
+    }
+  </style>
+  <button>Button outside a shadow tree</button>
+  <button-group>
+    <template shadowrootmode="open">
+      <style>
+        @layer inherit.css-framework.as.css-framework, css-framework;
+      </style>
+      <button>
+        Button inside a shadow tree (thick dashed red) (styled from
+        css-framework)
+      </button>
+    </template>
+  </button-group>
+</body>
+```
+
+</details>

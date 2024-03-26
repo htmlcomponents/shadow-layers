@@ -239,6 +239,8 @@ export default class ShadowLayers {
    * @returns {boolean} - Always returns true.
    */
   static inherit(shadowTreeElement, newLayers) {
+    const newLayersDotAsDotItemsRemoved =
+      ShadowLayers.removeArrayItemsWithDotAsDot(newLayers);
     // get old layers from the shadow tree
     let oldLayers = [];
     const oldLayerStatementRule =
@@ -257,7 +259,8 @@ export default class ShadowLayers {
 
     // insert new inherited layers, intermixed with shadow layers
     const mergedNewLayers = ShadowLayers.mergeLayerNames(
-      newLayers,
+      // newLayers,
+      newLayersDotAsDotItemsRemoved,
       oldShadowLayers
     );
 
@@ -269,6 +272,10 @@ export default class ShadowLayers {
     // update layer statement rule
     ShadowLayers.replaceLayerStatementRule(shadowTreeElement, mergedNewLayers);
     return true;
+  }
+
+  static removeArrayItemsWithDotAsDot(items) {
+    return items.filter((item) => !item.includes(".as."));
   }
 
   /**
@@ -385,6 +392,107 @@ export default class ShadowLayers {
       shadowLayerStatementRule.ruleIndex
     ).nameList;
 
+    ShadowLayers.insertDotAsDotLayers(shadowTreeElement, shadowLayerNames);
+
     return ShadowLayers.inherit(shadowTreeElement, shadowLayerNames);
+  }
+
+  static insertDotAsDotLayers(shadowTreeElement, layers) {
+    let dotAsDotLayer;
+    let inheritedLayerCSSText;
+    layers.forEach((layerName) => {
+      dotAsDotLayer = ShadowLayers.GetLayerNameAndRenamedLayerName(layerName);
+      if (dotAsDotLayer === false) {
+        return;
+      }
+      inheritedLayerCSSText =
+        ShadowLayers.getDotAsDotLayerCSSText(dotAsDotLayer);
+
+      ShadowLayers.insertRule(shadowTreeElement, inheritedLayerCSSText);
+    });
+  }
+
+  static GetLayerNameAndRenamedLayerName(layerNameString) {
+    if (!layerNameString.startsWith("inherit.")) {
+      return false;
+    }
+
+    const parts = layerNameString.split(".as.");
+
+    if (parts.length !== 2) {
+      return false;
+    }
+
+    let layername = parts[0].split(".").slice(1).join(".");
+    const renamedlayername = parts[1];
+
+    if (!layername || !renamedlayername) {
+      return false;
+    }
+
+    return { layername, renamedlayername };
+  }
+
+  static getDotAsDotLayerCSSText(layerObject) {
+    switch (layerObject.layername) {
+      case "unlayered":
+        return ShadowLayers.getUnlayeredLayerCSSText(layerObject);
+      case "layered":
+        return ShadowLayers.getLayeredLayerCSSText(layerObject);
+      default:
+        break;
+    }
+
+    const layerRule = ShadowLayers.findLayerBlockRuleInStyleSheets(
+      document.styleSheets,
+      layerObject.layername
+    );
+
+    if (layerRule === -1) {
+      return "";
+    }
+    const cssText = layerRule.styleSheet.cssRules.item(
+      layerRule.ruleIndex
+    ).cssText;
+
+    return cssText.replace(
+      layerObject.layername,
+      `${layerObject.renamedlayername}`
+    );
+  }
+
+  static getUnlayeredLayerCSSText(layerObject) {
+    let cssText = "";
+    [...document.styleSheets].forEach((styleSheet) => {
+      [...styleSheet.cssRules].forEach((cssRule) => {
+        if (cssRule.cssText.startsWith("@layer")) {
+          return;
+        }
+        // console.log(cssRule);
+        cssText += cssRule.cssText;
+      });
+    });
+
+    // const layer = `@layer ${layerObject.renamedlayername} {${cssText}}`;
+    // console.log(layer);
+    // return layer;
+    return `@layer ${layerObject.renamedlayername} {${cssText}}`;
+  }
+
+  static getLayeredLayerCSSText(layerObject) {
+    let cssText = "";
+    [...document.styleSheets].forEach((styleSheet) => {
+      [...styleSheet.cssRules].forEach((cssRule) => {
+        if (cssRule.cssText.startsWith("@layer")) {
+          console.log(cssRule);
+          cssText += cssRule.cssText;
+        }
+      });
+    });
+
+    // const layer = `@layer ${layerObject.renamedlayername} {${cssText}}`;
+    // console.log(layer);
+    // return layer;
+    return `@layer ${layerObject.renamedlayername} {${cssText}}`;
   }
 }

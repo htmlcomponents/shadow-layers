@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shadow tree designer provided template</title>
+    <script src='./resources/testharness.js'></script>
+    <script src='./resources/testharnessreport.js'></script>
+</head>
+
+<body>
+    <style>
+        @layer shadowbuttons {
+            :host(button-group) button {
+                border: thick dashed red;
+            }
+        }
+    </style>
+    <button>Button outside a shadow tree</button>
+    <button-group>
+        <template shadowrootmode="open">
+            <style>
+                @layer buttons, inherit.shadowbuttons;
+
+                @layer buttons {
+                    button {
+                        border: thick solid black;
+                    }
+                }
+            </style>
+            <button>Button inside a shadow tree</button>
+            <button>Button inside a shadow tree</button>
+        </template>
+    </button-group>
+
+    <script type="module">
+        import ShadowLayers from '../ShadowLayers.js';
+
+        window.onload = function () {
+
+            const elName = "button-group"
+
+            test(function () {
+
+                const inheritResult = ShadowLayers.inheritFromShadowStatementRule(document.querySelector(elName))
+                assert_true(inheritResult, "inherit found, so returns true");
+            }, "Shadow tree designer provided template");
+
+        }
+    </script>
+
+    <div id="log"></div>
+
+</body>
+
+</html>

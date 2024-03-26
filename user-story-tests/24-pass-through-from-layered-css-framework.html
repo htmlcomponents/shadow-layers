@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pass through from layered CSS framework</title>
+    <script src='./resources/testharness.js'></script>
+    <script src='./resources/testharnessreport.js'></script>
+</head>
+
+<body>
+
+    <style>
+        @layer css-framework {
+            button {
+                border: thick dashed red;
+            }
+        }
+
+        button {
+            border: thick solid black;
+        }
+    </style>
+    <button>Button outside a shadow tree</button>
+    <button-group>
+        <template shadowrootmode="open">
+            <style>
+                @layer inherit.css-framework.as.css-framework, css-framework;
+            </style>
+            <button>
+                Button inside a shadow tree (thick dashed red) (styled from
+                css-framework)
+            </button>
+        </template>
+    </button-group>
+
+    <script type="module">
+        import ShadowLayers from '../ShadowLayers.js';
+
+        window.onload = function () {
+
+            const elName = "button-group"
+
+            test(function () {
+
+                const inheritResult = ShadowLayers.inheritFromShadowStatementRule(document.querySelector(elName))
+                assert_true(inheritResult, "inherit found, so returns true");
+            }, "Pass through from layered CSS framework");
+
+        }
+    </script>
+
+    <div id="log"></div>
+
+</body>
+
+</html>
