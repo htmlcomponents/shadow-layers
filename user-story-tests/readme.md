@@ -928,3 +928,33 @@ Example:
 ```
 
 </details>
+
+<details>
+<summary>26 Page styles only affecting shadow tree</summary>
+As a shadow tree or web component user, I want to provide some page styles outside a shadow tree that won't affect the page at all but can be inherited into the shadow tree, so that I can write page styles that only affect shadow trees.
+
+[Note that when evaluated in the context of a shadow tree](https://drafts.csswg.org/css-scoping/#host-selector), `:host( <compound-selector> )` matches the shadow tree’s shadow host if the shadow host, in its normal context, matches the selector argument. In any other context, it matches nothing. `:host` behaves similarly in any other context.
+
+```html
+<style>
+  @layer button-group-styles {
+    :host(button-group) button {
+      border: thick dashed red;
+    }
+  }
+</style>
+<button>Button outside a shadow tree (not thick dashed red)</button>
+<button-group>
+  <template shadowrootmode="open">
+    <style>
+      @layer inherit.button-group-styles.as.page-defined-styles, page-defined-styles;
+    </style>
+    <button>
+      Button inside a shadow tree (thick dashed red) (from page layer
+      'button-group-styles')
+    </button>
+  </template>
+</button-group>
+```
+
+</details>
