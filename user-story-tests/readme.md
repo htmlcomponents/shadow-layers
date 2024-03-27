@@ -445,7 +445,9 @@ As a web page author I want to bring in my resets layer as a renamed layer so th
           }
         }
       </style>
-      <button>Button inside a shadow tree</button>
+      <button>
+        Button inside a shadow tree (thick dashed red) (from outer resets layer)
+      </button>
     </template>
   </button-group>
 </body>
@@ -487,7 +489,10 @@ Example:
           }
         }
       </style>
-      <button>Button inside a shadow tree</button>
+      <button>
+        Button inside a shadow tree (thick solid black) (from shadow tree
+        resets)
+      </button>
     </template>
   </button-group>
 </body>
@@ -773,6 +778,8 @@ Example:
       button {
         border: thick dashed yellow;
       }
+
+      @import url(assets/resets.css) layer(resets);
     }
   </style>
   <button>Button outside a shadow tree</button>
@@ -857,6 +864,63 @@ Example:
       <button>
         Button inside a shadow tree (thick dashed red) (styled from
         css-framework)
+      </button>
+    </template>
+  </button-group>
+</body>
+```
+
+</details>
+
+<details>
+<summary>25 Inherit @imported CSS file</summary>
+
+As a shadow tree or web component user, I want to inherit into a shadow tree a CSS file that I have already @imported into the page outside the shadow tree, so that I don't have to @import the same CSS file twice (once into the page, and again into the shadow tree).
+
+In other words, I don't want to have to do this:
+
+resets.css file:
+
+```css
+button {
+  border: thick dashed red;
+}
+```
+
+Double @import I don't want to do:
+
+```html
+<body>
+  @import assets/resets.css;
+  <button>Button outside a shadow tree</button>
+  <button-group>
+    <template shadowrootmode="open">
+      @import assets/resets.css;
+      <button>
+        Button inside a shadow tree (thick dashed red) (double imported
+        resets.css)
+      </button>
+    </template>
+  </button-group>
+</body>
+```
+
+See also [Allow authors to apply new css features (like cascade layers) while linking stylesheets #7540](https://github.com/whatwg/html/issues/7540) and [Provide an attribute for assigning a `<link>` to a cascade layer #5853](https://github.com/w3c/csswg-drafts/issues/5853).
+
+Example:
+
+```html
+<body>
+  @import assets/resets.css layer(resets);
+  <button>Button outside a shadow tree</button>
+  <button-group>
+    <template shadowrootmode="open">
+      <style>
+        @layer inherit.resets.as.outerresets, outerresets;
+      </style>
+      <button>
+        Button inside a shadow tree (thick dashed red) (from inherited
+        resets.css file)
       </button>
     </template>
   </button-group>

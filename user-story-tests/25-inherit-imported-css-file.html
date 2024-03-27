@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inherit all outer page styles</title>
+    <title>Inherit @imported CSS file</title>
     <script src='./resources/testharness.js'></script>
     <script src='./resources/testharnessreport.js'></script>
 </head>
@@ -12,27 +12,17 @@
 <body>
 
     <style>
-        button {
-            border: thick solid black;
-        }
-
-        @layer buttons {
-            button {
-                border: thick dashed yellow;
-            }
-        }
-
         @import url(assets/resets.css) layer(resets);
     </style>
     <button>Button outside a shadow tree</button>
     <button-group>
         <template shadowrootmode="open">
             <style>
-                @layer inherit.layered.as.layered, inherit.unlayered.as.unlayered, layered, unlayered;
+                @layer inherit.resets.as.outerresets, outerresets;
             </style>
             <button>
-                Button inside a shadow tree (thick solid black) (styled from unlayered
-                page styles)
+                Button inside a shadow tree (thick dashed red) (from inherited
+                resets.css file)
             </button>
         </template>
     </button-group>
@@ -48,7 +38,7 @@
 
                 const inheritResult = ShadowLayers.inheritFromShadowStatementRule(document.querySelector(elName))
                 assert_true(inheritResult, "inherit found, so returns true");
-            }, "Inherit all outer page styles");
+            }, "Inherit @imported CSS file");
 
         }
     </script>

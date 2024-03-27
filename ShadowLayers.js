@@ -443,6 +443,12 @@ export default class ShadowLayers {
         break;
     }
 
+    const cssTextOfCssFileWithLayerName =
+      ShadowLayers.getCssTextOfImportedCssFileWithLayerName(layerObject);
+    if (cssTextOfCssFileWithLayerName !== "") {
+      return cssTextOfCssFileWithLayerName;
+    }
+
     const layerRule = ShadowLayers.findLayerBlockRuleInStyleSheets(
       document.styleSheets,
       layerObject.layername
@@ -468,14 +474,10 @@ export default class ShadowLayers {
         if (cssRule.cssText.startsWith("@layer")) {
           return;
         }
-        // console.log(cssRule);
         cssText += cssRule.cssText;
       });
     });
 
-    // const layer = `@layer ${layerObject.renamedlayername} {${cssText}}`;
-    // console.log(layer);
-    // return layer;
     return `@layer ${layerObject.renamedlayername} {${cssText}}`;
   }
 
@@ -483,16 +485,49 @@ export default class ShadowLayers {
     let cssText = "";
     [...document.styleSheets].forEach((styleSheet) => {
       [...styleSheet.cssRules].forEach((cssRule) => {
+        if (cssRule instanceof CSSImportRule && cssRule.layerName !== null) {
+          let importRulesCssText = "";
+          const importCssRules = cssRule.styleSheet.cssRules;
+          [...importCssRules].forEach((cssRule) => {
+            importRulesCssText += cssRule.cssText;
+          });
+          const importRulesCssTextInLayer = `@layer ${cssRule.layerName} {
+${importRulesCssText}
+}`;
+          cssText += importRulesCssTextInLayer;
+        }
+
         if (cssRule.cssText.startsWith("@layer")) {
-          console.log(cssRule);
           cssText += cssRule.cssText;
         }
       });
     });
 
-    // const layer = `@layer ${layerObject.renamedlayername} {${cssText}}`;
-    // console.log(layer);
-    // return layer;
     return `@layer ${layerObject.renamedlayername} {${cssText}}`;
+  }
+
+  static getCssTextOfImportedCssFileWithLayerName(layerObject) {
+    let cssText = "";
+    [...document.styleSheets].forEach((styleSheet) => {
+      [...styleSheet.cssRules].forEach((cssRule) => {
+        if (
+          cssRule instanceof CSSImportRule &&
+          cssRule.layerName === layerObject.layername
+        ) {
+          const importCssRules = cssRule.styleSheet.cssRules;
+          [...importCssRules].forEach((cssRule) => {
+            cssText += cssRule.cssText;
+          });
+        }
+      });
+    });
+
+    if (cssText === "") {
+      return "";
+    }
+
+    const layeredCssText = `@layer ${layerObject.renamedlayername} {${cssText}}`;
+    console.log(layeredCssText);
+    return layeredCssText;
   }
 }
