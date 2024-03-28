@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Markdown component with author-defined page layer</title>
+    <script src='./resources/testharness.js'></script>
+    <script src='./resources/testharnessreport.js'></script>
+</head>
+
+<body>
+
+    <script type="module">
+        import { MDBlockWithAuthorDefinedPageLayer } from "./components/MDBlockWithAuthorDefinedPageLayer.js";
+        customElements.define(
+            "md-block-with-author-defined-page-layer",
+            MDBlockWithAuthorDefinedPageLayer
+        );
+    </script>
+
+    <style>
+        @layer md-block-styles {
+            h2 {
+                border: thick dashed red;
+            }
+        }
+    </style>
+    <h2>H2 outside shadow tree</h2>
+    <md-block-with-author-defined-page-layer>
+        <script type="text/markdown">
+      ## H2 from markdown (thick dashed red) (from page styles)
+    </script>
+    </md-block-with-author-defined-page-layer>
+
+    <script type="module">
+        import ShadowLayers from '../ShadowLayers.js';
+
+        window.onload = function () {
+
+            test(function () {
+
+                assert_true(true, "always true, just to show the test is running");
+
+            }, "Markdown component with author-defined page layer");
+
+        }
+    </script>
+
+    <div id="log"></div>
+
+</body>
+
+</html>

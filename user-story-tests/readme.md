@@ -1,6 +1,6 @@
 # User Story Tests
 
-Here are user stories and corresponding Web Platform Tests for the [collection of user stories #1052](https://github.com/WICG/webcomponents/issues/1052) for ["open-stylable" Shadow Roots #909](https://github.com/WICG/webcomponents/issues/909).
+Here are user stories and corresponding web platform [tests](https://github.com/htmlcomponents/shadow-layers/tree/main/user-story-tests) for the [collection of user stories #1052](https://github.com/WICG/webcomponents/issues/1052) for ["open-stylable" Shadow Roots #909](https://github.com/WICG/webcomponents/issues/909).
 
 <details>
 <summary>01 Page resets</summary>
@@ -911,7 +911,9 @@ Example:
 
 ```html
 <body>
-  @import assets/resets.css layer(resets);
+  <style>
+    @import assets/resets.css layer(resets);
+  </style>
   <button>Button outside a shadow tree</button>
   <button-group>
     <template shadowrootmode="open">
@@ -931,9 +933,12 @@ Example:
 
 <details>
 <summary>26 Page styles only affecting shadow tree</summary>
+<p>
 As a shadow tree or web component user, I want to provide some page styles outside a shadow tree that won't affect the page at all but can be inherited into the shadow tree, so that I can write page styles that only affect shadow trees.
+</p>
 
-[Note that when evaluated in the context of a shadow tree](https://drafts.csswg.org/css-scoping/#host-selector), `:host( <compound-selector> )` matches the shadow tree’s shadow host if the shadow host, in its normal context, matches the selector argument. In any other context, it matches nothing. `:host` behaves similarly in any other context.
+- Note that [when evaluated in the context of a shadow tree](https://drafts.csswg.org/css-scoping/#host-selector), `:host( <compound-selector> )` matches the shadow tree’s shadow host if the shadow host, in its normal context, matches the selector argument. In any other context, it matches nothing.
+- `:host` behaves similarly in any other context.
 
 ```html
 <style>
@@ -955,6 +960,176 @@ As a shadow tree or web component user, I want to provide some page styles outsi
     </button>
   </template>
 </button-group>
+```
+
+</details>
+
+<details>
+<summary>27 Markdown component with automatic page styles</summary>
+
+As a web component author, I want to write a web component that transforms markdown into HTML and brings in page styles, so that transformed markdown is styled from page styles without the web component user having to do anything.
+
+A [prototypical](https://github.com/WICG/webcomponents/issues/909#issuecomment-1936910846) `<md-block>` web component with page styles.
+
+```html
+<body>
+  <style>
+    h2 {
+      border: thick dashed red;
+    }
+  </style>
+  <h2>H2 outside shadow tree</h2>
+  <md-block>
+    <script type="text/markdown">
+      ## H2 from markdown (thick dashed red) (from page styles)
+    </script>
+  </md-block>
+</body>
+```
+
+</details>
+
+<details>
+<summary>28 Markdown component with author-defined page layer</summary>
+
+As a web component author, I want to write a web component that transforms markdown into HTML and brings in a page layer with a name that I designate, so that the transformed markdown is styled from the named page layer I designate.
+
+```html
+<body>
+  <style>
+    @layer md-block-styles {
+      h2 {
+        border: thick dashed red;
+      }
+    }
+  </style>
+  <h2>H2 outside shadow tree</h2>
+  <md-block-with-author-defined-page-layer>
+    <script type="text/markdown">
+      ## H2 from markdown (thick dashed red) (from page styles)
+    </script>
+  </md-block-with-author-defined-page-layer>
+</body>
+```
+
+</details>
+
+<details>
+<summary>29 Markdown component with author-defined lower priority shadow layer
+</summary>
+
+As a web component author, I want to write a web component that transforms markdown into HTML and brings in page styles, so that the transformed markdown is styled from page styles if they exist and if not the transformed markdown is styled by default web component provided styles, without the web component user having to do anything.
+
+```html
+<body>
+  <style>
+    h2 {
+      border: thick dashed red;
+    }
+  </style>
+  <h2>H2 outside shadow tree</h2>
+  <md-block-with-author-defined-lower-priority-shadow-layer>
+    <script type="text/markdown">
+      ## H2 from markdown (thick dashed red) (from page styles)
+
+      ### H3 from markdown (thick solid black) (from web component default styles)
+    </script>
+  </md-block-with-author-defined-lower-priority-shadow-layer>
+</body>
+```
+
+</details>
+
+<details>
+<summary>30 Markdown component with author-defined higher priority shadow layer</summary>
+
+As a web component author, I want to write a web component that transforms markdown into HTML and brings in page styles, so that the transformed markdown is styled from page styles, but if web component default styles exist they have higher priority, without the web component user having to do anything.
+
+```html
+<body>
+  <style>
+    h2,
+    h3 {
+      border: thick dashed red;
+    }
+  </style>
+  <h2>H2 outside shadow tree</h2>
+  <md-block-with-author-defined-higher-priority-shadow-layer>
+    <script type="text/markdown">
+      ## H2 from markdown (thick dashed red) (from page styles)
+
+      ### H3 from markdown (thick solid black) (from web component default styles)
+    </script>
+  </md-block-with-author-defined-higher-priority-shadow-layer>
+</body>
+```
+
+</details>
+
+<details>
+<summary>31 Markdown component with user-selectable page styles</summary>
+
+As a web component author, I want to write a web component that transforms markdown into HTML, and has default markdown styles and user-selectable page styles, so that the transformed markdown is styled by either the defaults or by the styled user-selectable page styles, as the user sees fit.
+
+```html
+<body>
+  <style>
+    @layer resets {
+      h2 {
+        border: thick dashed red;
+      }
+    }
+  </style>
+  <h2>H2 outside shadow tree</h2>
+  <md-block-with-user-selectable-page-styles>
+    <script type="text/markdown">
+      ## H2 from markdown (thick dashed red) (from page styles)
+
+      ### H3 from markdown (thick solid black) (from component defaults)
+    </script>
+    <template shadowrootmode="open">
+      <style>
+        @layer inherit.resets.as.outerresets, mk-block-defaults, outerresets;
+      </style>
+    </template>
+  </md-block-with-user-selectable-page-styles>
+</body>
+```
+
+</details>
+
+<details>
+<summary>32 Markdown component with page @scope</summary>
+
+As a web component author, I want to write a web component that transforms markdown into HTML, and has default markdown styles and user-selectable page styles, so that the transformed markdown can be styled by a user-provided @scope page style.
+
+```html
+<body>
+  <style>
+    @layer markdown-scope-styles {
+      @scope (article) to (li) {
+        ul {
+          border: thick dashed red;
+        }
+      }
+    }
+  </style>
+  <h2>H2 outside shadow tree</h2>
+  <md-block-with-user-selectable-page-styles>
+    <script type="text/markdown">
+      ## H2 from markdown
+
+      - list item from markdown (thick dashed red) (from page @scope)
+
+      ### H3 from markdown (thick solid black) (from component defaults)
+    </script>
+    <template shadowrootmode="open">
+      <style>
+        @layer inherit.markdown-scope-styles.as.markdown-scope-styles, md-block-default-styles, markdown-scope-styles;
+      </style>
+    </template>
+  </md-block-with-user-selectable-page-styles>
+</body>
 ```
 
 </details>

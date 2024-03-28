@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Markdown component with user-selectable page styles</title>
+    <script src='./resources/testharness.js'></script>
+    <script src='./resources/testharnessreport.js'></script>
+</head>
+
+<body>
+
+    <script type="module">
+        import { MDBlockWithUserSelectablePageStyles } from "./components/MDBlockWithUserSelectablePageStyles.js";
+        customElements.define(
+            "md-block-with-user-selectable-page-styles",
+            MDBlockWithUserSelectablePageStyles
+        );
+    </script>
+
+    <style>
+        @layer resets {
+            h2 {
+                border: thick dashed red;
+            }
+        }
+    </style>
+    <h2>H2 outside shadow tree</h2>
+    <md-block-with-user-selectable-page-styles>
+        <script type="text/markdown">
+## H2 from markdown (thick dashed red) (from page styles)
+
+### H3 from markdown (thick solid black) (from component defaults)
+    </script>
+        <template shadowrootmode="open">
+            <style>
+                @layer inherit.resets.as.outerresets, md-block-default-styles, outerresets;
+            </style>
+        </template>
+    </md-block-with-user-selectable-page-styles>
+
+    <script type="module">
+        import ShadowLayers from '../ShadowLayers.js';
+
+        window.onload = function () {
+
+            test(function () {
+
+                assert_true(true, "always true, just to show the test is running");
+
+            }, "Markdown component with user-selectable page styles");
+
+        }
+    </script>
+
+    <div id="log"></div>
+
+</body>
+
+</html>
