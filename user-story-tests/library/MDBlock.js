@@ -7,40 +7,28 @@ import remarkGfm from "https://esm.sh/remark-gfm@4?bundle";
 
 import ShadowLayers from "../../ShadowLayers.js";
 
-export class MDBlockWithUserSelectablePageStyles extends HTMLElement {
+export class MDBlock extends HTMLElement {
   constructor() {
     super();
   }
 
   async connectedCallback() {
-    const shadow = this.shadowRoot;
+    const shadow = this.attachShadow({ mode: "open" });
     const markdown = this.getMarkdownFromScriptTag();
     const transformedMarkdown = await this.markdown2HTML(markdown);
-
     const style = `
-    <style>
-        @layer md-block-default-styles {
-          h3 {
-            border: thick solid black;
-          }
-        };
-    </style>
+<style>
+    @layer inherit.library-user.as.library-user, inherit.library.as.library, inherit.library-user-priority.as.library-user-priority, library-user, library, inherit, library-user-priority;
+</style>
+`;
+    const shadowWithStyle = `
+    ${style}
+    ${transformedMarkdown}
     `;
-    const transformedMarkdownWithShadowStyle = `
-        ${style}
-        <article>
-        ${transformedMarkdown}
-        </article>
-        `;
-
-    const template = document.createElement("template");
-    template.innerHTML = transformedMarkdownWithShadowStyle;
-    const nodes = template.content;
-    console.log("Nodes:", nodes);
-    shadow.append(nodes);
+    shadow.innerHTML = shadowWithStyle;
 
     const inheritResult = ShadowLayers.inheritFromShadowStatementRule(
-      document.querySelector("md-block-with-user-selectable-page-styles")
+      document.querySelector("md-block")
     );
   }
 

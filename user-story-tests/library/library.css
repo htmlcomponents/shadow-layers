@@ -1,0 +1,13 @@
+:host(md-block) h6 {
+  border: thick solid black;
+}
+
+:host(counter-button) button {
+  border: thick solid black;
+}
+
+:host(section-container) section {
+  padding: 2em;
+  margin: 2em;
+  background-color: lightgray;
+}

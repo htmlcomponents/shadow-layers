@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Component library with individual component user-settable lower and higher priority page styles</title>
+    <script src='./resources/testharness.js'></script>
+    <script src='./resources/testharnessreport.js'></script>
+</head>
+
+<body>
+
+    <script type="module">
+        import { MDBlock } from "./library/MDBlock.js";
+        import { CounterButton } from "./library/CounterButton.js";
+        customElements.define(
+            "md-block",
+            MDBlock
+        );
+        customElements.define(
+            "counter-button",
+            CounterButton
+        );
+    </script>
+
+    <style>
+        @import url(library/library.css) layer(library);
+
+        @layer page-layer {
+            h2 {
+                border: thick dashed red;
+            }
+
+            button {
+                border: thick ridge yellow;
+            }
+
+            section {
+                border: thick solid black;
+            }
+        }
+    </style>
+    <section>
+        Section outside shadow tree
+        <h2>H2 outside shadow tree</h2>
+        <button>button outside shadow tree</h2>
+    </section>
+    <section-container>
+        <template shadowrootmode="open">
+            <style>
+                @layer inherit, inherit.library.as.library, library;
+            </style>
+            <section>
+                <slot></slot>
+            </section>
+        </template>
+        <md-block>
+            <script type="text/markdown">
+## H2 from markdown (thick dashed red) (from page layer)
+
+###### H6 from markdown (thick solid black) (from component defaults)
+      </script>
+        </md-block>
+        <counter-button></counter-button>
+    </section-container>
+
+
+    <script type="module">
+        import ShadowLayers from '../ShadowLayers.js';
+
+        window.onload = function () {
+
+            test(function () {
+
+                const elName = "section-container"
+                const inheritResult = ShadowLayers.inheritFromShadowStatementRule(document.querySelector(elName))
+                assert_true(inheritResult, "inherit found, so returns true");
+
+            }, "Component library with individual component user-settable lower and higher priority page styles");
+
+        }
+    </script>
+
+    <div id="log"></div>
+
+</body>
+
+</html>

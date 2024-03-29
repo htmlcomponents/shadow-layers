@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Component library with CSS file and page styles</title>
+    <script src='./resources/testharness.js'></script>
+    <script src='./resources/testharnessreport.js'></script>
+</head>
+
+<body>
+
+    <script type="module">
+        import { MDBlock } from "./library/MDBlock.js";
+        import { CounterButton } from "./library/CounterButton.js";
+        customElements.define(
+            "md-block",
+            MDBlock
+        );
+        customElements.define(
+            "counter-button",
+            CounterButton
+        );
+    </script>
+
+    <style>
+        @import url(library/library.css) layer(library);
+
+        h2 {
+            border: thick dashed red;
+        }
+
+        button {
+            border: thick ridge yellow;
+        }
+
+        section {
+            border: thick solid black;
+        }
+    </style>
+    <section>
+        Section outside shadow tree
+        <h2>H2 outside shadow tree</h2>
+        <button>button outside shadow tree</h2>
+    </section>
+    <md-block>
+        <script type="text/markdown">
+## H2 from markdown (thick dashed red) (from page styles)
+    </script>
+    </md-block>
+    <counter-button></counter-button>
+
+    <script type="module">
+        import ShadowLayers from '../ShadowLayers.js';
+
+        window.onload = function () {
+
+            test(function () {
+
+                assert_true(true, "always true, just to show the test is running");
+
+            }, "Component library with CSS file and page styles");
+
+        }
+    </script>
+
+    <div id="log"></div>
+
+</body>
+
+</html>

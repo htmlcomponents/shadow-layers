@@ -1133,3 +1133,220 @@ As a web component author, I want to write a web component that transforms markd
 ```
 
 </details>
+
+<details>
+<summary>33 Component library with CSS file and page styles</summary>
+
+As a shadow-tree-based component library author or maintainer I want to provide a single, once-imported CSS file for all the components in the library and also bring all page styles into some of the components, so that library and page styles only apply to some or all components as appropriate.
+
+Exemplar imperative components:
+
+- **`<md-block>`**: An imperative (Javascript) component that transforms and displays markdown contained in a `<script type="text/markdown">` element. (a [prototypical](https://github.com/WICG/webcomponents/issues/909#issuecomment-1936910846) imperative shadow tree component with page styles added, see 27-32 Markdown Component user stories)
+- **`<counter-button>`**: An imperative (Javascript) shadow tree component with a clickable counter button. (like a [prototypical plain DOM Javascript component](https://vitejs.dev/guide/))
+
+See user story "25 Inherit imported css file".
+
+```html
+<body>
+    <style>
+        @import url(library/library.css) layer(library);
+
+        h2 {
+            border: thick dashed red;
+        }
+
+        button {
+            border: thick ridge yellow;
+        }
+
+        section {
+            border: thick solid red;
+        }
+    </style>
+    <section>
+        Section outside shadow tree
+        <h2>H2 outside shadow tree</h2>
+        <button>button outside shadow tree</h2>
+    </section>
+    <md-block>
+        <script type="text/markdown">
+## H2 from markdown (thick dashed red) (from page styles)
+    </script>
+    </md-block>
+    <counter-button></counter-button>
+</body>
+```
+
+</details>
+
+<details>
+<summary>34 Component library with declarative and imperative components and page styles</summary>
+
+As a shadow-tree-based component library author or maintainer starting from the component library in "33 Component library with CSS file and page styles", I want to add declarative-only components (components built with declarative shadow DOM and no Javascript), so that the library provides both declarative and imperative components.
+
+Exemplar declarative component:
+
+- **`<section-container>`**: A declarative component (no Javascript declarative shadow tree) that styles semantic HTML elements section, header, and footer. (A platform-encapusulated version of a [very commonly](https://wordpress.com/support/wordpress-editor/blocks/group-block/) implemented [web design pattern](https://university.webflow.com/lesson/container?topics=elements)).
+
+```html
+<body>
+    <style>
+        @import url(library/library.css) layer(library);
+
+        h2 {
+            border: thick dashed red;
+        }
+
+        button {
+            border: thick ridge yellow;
+        }
+
+        section {
+            border: thick solid black;
+        }
+    </style>
+    <section>
+        Section outside shadow tree
+        <h2>H2 outside shadow tree</h2>
+        <button>button outside shadow tree</h2>
+    </section>
+    <section-container>
+        <template shadowrootmode="open">
+            <style>
+                @layer inherit, inherit.library.as.library, library;
+            </style>
+            <section>
+                <slot></slot>
+            </section>
+        </template>
+        <div>section-container</div>
+        <md-block>
+            <script type="text/markdown">
+## H2 from markdown (thick dashed red) (from page styles)
+      </script>
+        </md-block>
+        <counter-button></counter-button>
+    </section-container>
+</body>
+```
+
+</details>
+
+<details>
+<summary>35 Component library with multi-component user-settable lower and higher priority page styles</summary>
+
+As a shadow-tree-based component library author or maintainer starting from the component library in "34 Component library with declarative and imperative components and page styles", I want to add multi-component user-settable lower and higher priority page styles, so that users can provide page styles that have either lower or higher priority than component default styles.
+
+```html
+<body>
+    <style>
+        @import url(library/library.css) layer(library);
+
+        h2 {
+            border: thick dashed red;
+        }
+
+        button {
+            border: thick ridge yellow;
+        }
+
+        section {
+            border: thick solid black;
+        }
+
+        @layer library-user {
+            h4 {
+                border: thick ridge red;
+            }
+        }
+
+        @layer library-user-priority {
+            h5 {
+                border: thick ridge black;
+            }
+        }
+    </style>
+    <section>
+        Section outside shadow tree
+        <h2>H2 outside shadow tree</h2>
+        <button>button outside shadow tree</h2>
+    </section>
+    <section-container>
+        <template shadowrootmode="open">
+            <style>
+                @layer inherit, inherit.library.as.library, library;
+            </style>
+            <section>
+                <slot></slot>
+            </section>
+        </template>
+        <md-block>
+            <script type="text/markdown">
+## H2 from markdown (thick dashed red) (from page styles)
+
+### H3 from markdown
+
+#### H4 from markdown (thick ridge red) (from library-user)
+
+##### H5 from markdown (thick ridge black) (from library-user-priority)
+      </script>
+        </md-block>
+        <counter-button></counter-button>
+    </section-container>
+</body>
+```
+
+</details>
+
+<details>
+<summary>36 Component library with individual component user-settable lower and higher priority page styles</summary>
+
+As a shadow-tree-based component library author or maintainer starting from the component library in "35 Component library with multi-component user-settable lower and higher priority page styles", I want to add to individual components user-settable lower and higher priority page styles, so that users can bring in and priortize any page style layers they want.
+
+```html
+<body>
+  <style>
+        @import url(library/library.css) layer(library);
+
+        @layer page-layer {
+            h2 {
+                border: thick dashed red;
+            }
+
+            button {
+                border: thick ridge yellow;
+            }
+
+            section {
+                border: thick solid black;
+            }
+        }
+    </style>
+    <section>
+        Section outside shadow tree
+        <h2>H2 outside shadow tree</h2>
+        <button>button outside shadow tree</h2>
+    </section>
+    <section-container>
+        <template shadowrootmode="open">
+            <style>
+                @layer inherit, inherit.library.as.library, library;
+            </style>
+            <section>
+                <slot></slot>
+            </section>
+        </template>
+        <md-block>
+            <script type="text/markdown">
+## H2 from markdown (thick dashed red) (from page layer)
+
+###### H6 from markdown (thick solid black) (from component defaults)
+      </script>
+        </md-block>
+        <counter-button></counter-button>
+    </section-container>
+
+</body>
+```
+
+</details>
