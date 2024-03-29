@@ -1330,7 +1330,7 @@ As a shadow-tree-based component library author or maintainer starting from the 
     <section-container>
         <template shadowrootmode="open">
             <style>
-                @layer inherit, inherit.library.as.library, library;
+              @layer inherit.page-layer.as.page-layer, inherit.library.as.library, library;
             </style>
             <section>
                 <slot></slot>
