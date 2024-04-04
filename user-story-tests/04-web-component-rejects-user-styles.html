@@ -25,6 +25,7 @@
             }
         }
     </style>
+    <button>Button outside a shadow tree (thick dashed red)</button>
     <web-component-rejects-user-styles>
         <template shadowrootmode="open">
             <style>
@@ -34,7 +35,7 @@
     </web-component-rejects-user-styles>
 
     <script type="module">
-        import ShadowLayers from '../ShadowLayers.js';
+        import { adoptStylesFromLayerStatementRule } from "../AdoptStyles.js";
 
         window.onload = function () {
 
@@ -42,7 +43,7 @@
 
             test(function () {
 
-                const inheritResult = ShadowLayers.inheritFromShadowStatementRule(document.querySelector(elName))
+                const inheritResult = adoptStylesFromLayerStatementRule(document.querySelector(elName))
                 assert_false(inheritResult, "inherit not found, so returns false");
 
             }, "Web component rejects user styles");

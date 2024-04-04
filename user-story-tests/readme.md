@@ -16,13 +16,15 @@ As a web page author I just want my page resets to work in my shadow tree so tha
       }
     }
   </style>
-  <button>Button outside a shadow tree</button>
+  <button>Button outside a shadow tree (thick dashed red)</button>
   <button-group>
     <template shadowrootmode="open">
       <style>
         @layer inherit.resets;
       </style>
-      <button>Button inside a shadow tree</button>
+      <button>
+        Button inside a shadow tree (thick dashed red) (from inherit.resets)
+      </button>
     </template>
   </button-group>
 </body>
@@ -49,7 +51,7 @@ As a web page author or shadow tree designer, I want to use declarative shadow D
       <style>
         @layer inherit.buttons;
       </style>
-      <button>Home</button>
+      <button>Home (thick solid blue) (from inherit.buttons)</button>
       <nav-bar>
         <template shadowrootmode="open">
           <style>
@@ -59,7 +61,7 @@ As a web page author or shadow tree designer, I want to use declarative shadow D
               }
             }
           </style>
-          <button>About</button>
+          <button>About (thick dashed red) (from shadow layer buttons)</button>
         </template>
       </nav-bar>
     </template>
@@ -123,6 +125,7 @@ As a web component author I want to reject any page styles that the web componen
       }
     }
   </style>
+  <button>Button outside a shadow tree (thick dashed red)</button>
   <web-component-rejects-user-styles>
     <template shadowrootmode="open">
       <style>
@@ -149,11 +152,11 @@ As a shadow tree designer I want the user of the shadow tree to be able to bring
       }
     }
   </style>
-  <button>Button outside a shadow tree</button>
+  <button>Button outside a shadow tree (thick dashed red)</button>
   <button-group>
     <template shadowrootmode="open">
       <style>
-        @layer inherit.resets buttons;
+        @layer inherit.resets, buttons;
 
         @layer buttons {
           button {
@@ -161,7 +164,10 @@ As a shadow tree designer I want the user of the shadow tree to be able to bring
           }
         }
       </style>
-      <button>Button inside a shadow tree</button>
+      <button>
+        Button inside a shadow tree (thick solid black) (from shadow buttons
+        layer)
+      </button>
     </template>
   </button-group>
 </body>
@@ -183,7 +189,7 @@ As a shadow tree designer I want the user of the shadow tree to be able to bring
       }
     }
   </style>
-  <button>Button outside a shadow tree</button>
+  <button>Button outside a shadow tree (thick dashed red)</button>
   <button-group>
     <template shadowrootmode="open">
       <style>
@@ -195,7 +201,9 @@ As a shadow tree designer I want the user of the shadow tree to be able to bring
           }
         }
       </style>
-      <button>Button inside a shadow tree</button>
+      <button>
+        Button inside a shadow tree (thick dashed red) (from inherit.resets)
+      </button>
     </template>
   </button-group>
 </body>
@@ -217,7 +225,7 @@ As a shadow tree designer I want the user of the shadow tree to be able to bring
       }
     }
   </style>
-  <button>Button outside a shadow tree</button>
+  <button>Button outside a shadow tree (thick dashed red)</button>
   <button-group>
     <template shadowrootmode="open">
       <style>
@@ -229,7 +237,10 @@ As a shadow tree designer I want the user of the shadow tree to be able to bring
           }
         }
       </style>
-      <button>Button inside a shadow tree</button>
+      <button>
+        Button inside a shadow tree (thick solid black) (from shadow layer
+        buttons)
+      </button>
     </template>
   </button-group>
 </body>
@@ -251,7 +262,7 @@ As a shadow tree designer I want the user of the shadow tree to be able to bring
       }
     }
   </style>
-  <button>Button outside a shadow tree</button>
+  <button>Button outside a shadow tree (thick dashed red)</button>
   <button-group>
     <template shadowrootmode="open">
       <style>
@@ -263,7 +274,9 @@ As a shadow tree designer I want the user of the shadow tree to be able to bring
           }
         }
       </style>
-      <button>Button inside a shadow tree</button>
+      <button>
+        Button inside a shadow tree (thick dashed red) (from inherit)
+      </button>
     </template>
   </button-group>
 </body>
@@ -292,7 +305,7 @@ As a web component author I want to bring in all page styles at a low priority w
       }
     }
   </style>
-  <button>Button outside a shadow tree</button>
+  <button>Button outside a shadow tree (thick dashed red)</button>
   <web-component-all-page-styles-low-priority>
   </web-component-all-page-styles-low-priority>
 </body>
@@ -321,7 +334,7 @@ As a web component author I want to bring in all page styles at a high priority 
       }
     }
   </style>
-  <button>Button outside a shadow tree</button>
+  <button>Button outside a shadow tree (thick dashed red)</button>
   <web-component-all-page-styles-high-priority>
   </web-component-all-page-styles-high-priority>
 </body>
@@ -343,7 +356,7 @@ As a shadow tree designer or web component author, I want to provide users a def
       }
     }
   </style>
-  <button>Button outside a shadow tree</button>
+  <button>Button outside a shadow tree (unstyled)</button>
   <button-group>
     <template shadowrootmode="open">
       <style>
@@ -355,8 +368,10 @@ As a shadow tree designer or web component author, I want to provide users a def
           }
         }
       </style>
-      <button>Button inside a shadow tree</button>
-      <button>Button inside a shadow tree</button>
+      <button>
+        Button inside a shadow tree (thick dashed red) (from
+        inherit.shadowbuttons)
+      </button>
     </template>
   </button-group>
 </body>
@@ -433,7 +448,7 @@ As a web page author I want to bring in my resets layer as a renamed layer so th
       }
     }
   </style>
-  <button>Button outside a shadow tree</button>
+  <button>Button outside a shadow tree (thick dashed red)</button>
   <button-group>
     <template shadowrootmode="open">
       <style>
@@ -446,7 +461,8 @@ As a web page author I want to bring in my resets layer as a renamed layer so th
         }
       </style>
       <button>
-        Button inside a shadow tree (thick dashed red) (from outer resets layer)
+        Button inside a shadow tree (thick dashed red) (from
+        inherit.resets.as.shadowresets)
       </button>
     </template>
   </button-group>
@@ -477,7 +493,7 @@ Example:
       }
     }
   </style>
-  <button>Button outside a shadow tree</button>
+  <button>Button outside a shadow tree (thick dashed red)</button>
   <button-group>
     <template shadowrootmode="open">
       <style>
@@ -490,8 +506,8 @@ Example:
         }
       </style>
       <button>
-        Button inside a shadow tree (thick solid black) (from shadow tree
-        resets)
+        Button inside a shadow tree (thick solid black) (from shadow tree resets
+        layer)
       </button>
     </template>
   </button-group>
@@ -521,13 +537,14 @@ Example:
         border: thick dashed red;
       }
     }
+
     @layer B {
       button.b {
         border: thick solid blue;
       }
     }
   </style>
-  <button>Button outside a shadow tree</button>
+  <button>Button outside a shadow tree (unstyled)</button>
   <button-group>
     <template shadowrootmode="open">
       <style>
@@ -538,14 +555,19 @@ Example:
             border: thin dashed red;
           }
         }
+
         @layer B {
           button.b {
             border: thin solid blue;
           }
         }
       </style>
-      <button class="a">Button a (inner has priority, thin dashed red)</button>
-      <button class="b">Button b (outer has priority, thick solid blue)</button>
+      <button class="a">
+        Button a (thin dashed red) (inner A layer has priority)
+      </button>
+      <button class="b">
+        Button b (thick solid blue) (outer B layer has priority)
+      </button>
     </template>
   </button-group>
 </body>
@@ -609,7 +631,7 @@ Nonetheless, an @sheet supporting syntax would be possible:
 
 ```css
 //Inherit named sheet as layer
-@layer inherit.sheet.mysheet.as.mysheet, mysheet;
+@layer inherit.@sheet.mysheet.as.mysheet, mysheet;
 ```
 
 </details>
@@ -634,7 +656,7 @@ Example:
       border: thick solid black;
     }
   </style>
-  <button>Button outside a shadow tree</button>
+  <button>Button outside a shadow tree (thick solid black)</button>
   <button-group>
     <template shadowrootmode="open">
       <style>
@@ -647,7 +669,7 @@ Example:
         }
       </style>
       <button>
-        Button inside a shadow tree (thick dashed red) (styled from
+        Button inside a shadow tree (thick dashed red) (from shadow layer
         shadowstyles)
       </button>
     </template>
@@ -683,7 +705,7 @@ Example:
       }
     }
   </style>
-  <button>Button outside a shadow tree</button>
+  <button>Button outside a shadow tree (thick solid black)</button>
   <button-group>
     <template shadowrootmode="open">
       <style>
@@ -696,8 +718,8 @@ Example:
         }
       </style>
       <button>
-        Button inside a shadow tree (thick solid black) (styled from unlayered
-        page styles)
+        Button inside a shadow tree (thick solid black) (from
+        inherit.unlayered.as.unlayered)
       </button>
     </template>
   </button-group>
@@ -732,11 +754,12 @@ Example:
       }
     }
   </style>
-  <button>Button outside a shadow tree</button>
+  <button>Button outside a shadow tree (thick solid black)</button>
   <button-group>
     <template shadowrootmode="open">
       <style>
         @layer inherit.layered.as.layered, inherit.unlayered.as.unlayered, layered, shadowstyles, unlayered;
+
         @layer shadowstyles {
           button {
             border: thick dashed red;
@@ -744,8 +767,8 @@ Example:
         }
       </style>
       <button>
-        Button inside a shadow tree (thick solid black) (styled from unlayered
-        page styles)
+        Button inside a shadow tree (thick solid black) (from
+        inherit.unlayered.as.unlayered)
       </button>
     </template>
   </button-group>
@@ -778,19 +801,19 @@ Example:
       button {
         border: thick dashed yellow;
       }
-
-      @import url(assets/resets.css) layer(resets);
     }
+
+    @import url(assets/resets.css) layer(resets);
   </style>
-  <button>Button outside a shadow tree</button>
+  <button>Button outside a shadow tree (thick solid black)</button>
   <button-group>
     <template shadowrootmode="open">
       <style>
         @layer inherit.layered.as.layered, inherit.unlayered.as.unlayered, layered, unlayered;
       </style>
       <button>
-        Button inside a shadow tree (thick solid black) (styled from unlayered
-        page styles)
+        Button inside a shadow tree (thick solid black) (from
+        inherit.unlayered.as.unlayered)
       </button>
     </template>
   </button-group>
@@ -819,15 +842,15 @@ Example:
       }
     }
   </style>
-  <button>Button outside a shadow tree</button>
+  <button>Button outside a shadow tree (thick solid black)</button>
   <button-group>
     <template shadowrootmode="open">
       <style>
         @layer inherit.design-system.as.design-system, design-system;
       </style>
       <button>
-        Button inside a shadow tree (thick dashed red) (styled from design
-        system layer)
+        Button inside a shadow tree (thick dashed red) (from
+        inherit.design-system.as.design-system)
       </button>
     </template>
   </button-group>
@@ -851,19 +874,20 @@ Example:
         border: thick dashed red;
       }
     }
+
     button {
       border: thick solid black;
     }
   </style>
-  <button>Button outside a shadow tree</button>
+  <button>Button outside a shadow tree (thick solid black)</button>
   <button-group>
     <template shadowrootmode="open">
       <style>
         @layer inherit.css-framework.as.css-framework, css-framework;
       </style>
       <button>
-        Button inside a shadow tree (thick dashed red) (styled from
-        css-framework)
+        Button inside a shadow tree (thick dashed red) (from
+        inherit.css-framework.as.css-framework)
       </button>
     </template>
   </button-group>
@@ -912,9 +936,9 @@ Example:
 ```html
 <body>
   <style>
-    @import assets/resets.css layer(resets);
+    @import url(assets/resets.css) layer(resets);
   </style>
-  <button>Button outside a shadow tree</button>
+  <button>Button outside a shadow tree (thick dashed red)</button>
   <button-group>
     <template shadowrootmode="open">
       <style>
@@ -941,25 +965,27 @@ As a shadow tree or web component user, I want to provide some page styles outsi
 - `:host` behaves similarly in any other context.
 
 ```html
-<style>
-  @layer button-group-styles {
-    :host(button-group) button {
-      border: thick dashed red;
+<body>
+  <style>
+    @layer button-group-styles {
+      :host(button-group) button {
+        border: thick dashed red;
+      }
     }
-  }
-</style>
-<button>Button outside a shadow tree (not thick dashed red)</button>
-<button-group>
-  <template shadowrootmode="open">
-    <style>
-      @layer inherit.button-group-styles.as.page-defined-styles, page-defined-styles;
-    </style>
-    <button>
-      Button inside a shadow tree (thick dashed red) (from page layer
-      'button-group-styles')
-    </button>
-  </template>
-</button-group>
+  </style>
+  <button>Button outside a shadow tree (unstyled)</button>
+  <button-group>
+    <template shadowrootmode="open">
+      <style>
+        @layer inherit.button-group-styles.as.page-defined-styles, page-defined-styles;
+      </style>
+      <button>
+        Button inside a shadow tree (thick dashed red) (from
+        inherit.button-group-styles.as.page-defined-styles)
+      </button>
+    </template>
+  </button-group>
+</body>
 ```
 
 </details>
@@ -973,12 +999,17 @@ A [prototypical](https://github.com/WICG/webcomponents/issues/909#issuecomment-1
 
 ```html
 <body>
+  <script type="module">
+    import { MDBlock } from "./components/MDBlock.js";
+    customElements.define("md-block", MDBlock);
+  </script>
+
   <style>
     h2 {
       border: thick dashed red;
     }
   </style>
-  <h2>H2 outside shadow tree</h2>
+  <h2>H2 outside shadow tree (thick dashed red)</h2>
   <md-block>
     <script type="text/markdown">
       ## H2 from markdown (thick dashed red) (from page styles)
@@ -996,6 +1027,14 @@ As a web component author, I want to write a web component that transforms markd
 
 ```html
 <body>
+  <script type="module">
+    import { MDBlockWithAuthorDefinedPageLayer } from "./components/MDBlockWithAuthorDefinedPageLayer.js";
+    customElements.define(
+      "md-block-with-author-defined-page-layer",
+      MDBlockWithAuthorDefinedPageLayer
+    );
+  </script>
+
   <style>
     @layer md-block-styles {
       h2 {
@@ -1003,7 +1042,7 @@ As a web component author, I want to write a web component that transforms markd
       }
     }
   </style>
-  <h2>H2 outside shadow tree</h2>
+  <h2>H2 outside shadow tree (thick dashed red)</h2>
   <md-block-with-author-defined-page-layer>
     <script type="text/markdown">
       ## H2 from markdown (thick dashed red) (from page styles)
@@ -1022,12 +1061,20 @@ As a web component author, I want to write a web component that transforms markd
 
 ```html
 <body>
+  <script type="module">
+    import { MDBlockWithAuthorDefinedLowerPriorityShadowLayer } from "./components/MDBlockWithAuthorDefinedLowerPriorityShadowLayer.js";
+    customElements.define(
+      "md-block-with-author-defined-lower-priority-shadow-layer",
+      MDBlockWithAuthorDefinedLowerPriorityShadowLayer
+    );
+  </script>
+
   <style>
     h2 {
       border: thick dashed red;
     }
   </style>
-  <h2>H2 outside shadow tree</h2>
+  <h2>H2 outside shadow tree (thick dashed red)</h2>
   <md-block-with-author-defined-lower-priority-shadow-layer>
     <script type="text/markdown">
       ## H2 from markdown (thick dashed red) (from page styles)
@@ -1047,13 +1094,21 @@ As a web component author, I want to write a web component that transforms markd
 
 ```html
 <body>
+  <script type="module">
+    import { MDBlockWithAuthorDefinedHigherPriorityShadowLayer } from "./components/MDBlockWithAuthorDefinedHigherPriorityShadowLayer.js";
+    customElements.define(
+      "md-block-with-author-defined-higher-priority-shadow-layer",
+      MDBlockWithAuthorDefinedHigherPriorityShadowLayer
+    );
+  </script>
+
   <style>
     h2,
     h3 {
       border: thick dashed red;
     }
   </style>
-  <h2>H2 outside shadow tree</h2>
+  <h2>H2 outside shadow tree (thick dashed red)</h2>
   <md-block-with-author-defined-higher-priority-shadow-layer>
     <script type="text/markdown">
       ## H2 from markdown (thick dashed red) (from page styles)
@@ -1073,6 +1128,14 @@ As a web component author, I want to write a web component that transforms markd
 
 ```html
 <body>
+  <script type="module">
+    import { MDBlockWithUserSelectablePageStyles } from "./components/MDBlockWithUserSelectablePageStyles.js";
+    customElements.define(
+      "md-block-with-user-selectable-page-styles",
+      MDBlockWithUserSelectablePageStyles
+    );
+  </script>
+
   <style>
     @layer resets {
       h2 {
@@ -1080,7 +1143,7 @@ As a web component author, I want to write a web component that transforms markd
       }
     }
   </style>
-  <h2>H2 outside shadow tree</h2>
+  <h2>H2 outside shadow tree (thick dashed red)</h2>
   <md-block-with-user-selectable-page-styles>
     <script type="text/markdown">
       ## H2 from markdown (thick dashed red) (from page styles)
@@ -1089,7 +1152,7 @@ As a web component author, I want to write a web component that transforms markd
     </script>
     <template shadowrootmode="open">
       <style>
-        @layer inherit.resets.as.outerresets, mk-block-defaults, outerresets;
+        @layer inherit.resets.as.outerresets, md-block-default-styles, outerresets;
       </style>
     </template>
   </md-block-with-user-selectable-page-styles>
@@ -1105,6 +1168,14 @@ As a web component author, I want to write a web component that transforms markd
 
 ```html
 <body>
+  <script type="module">
+    import { MDBlockWithUserSelectablePageStyles } from "./components/MDBlockWithUserSelectablePageStyles.js";
+    customElements.define(
+      "md-block-with-user-selectable-page-styles",
+      MDBlockWithUserSelectablePageStyles
+    );
+  </script>
+
   <style>
     @layer markdown-scope-styles {
       @scope (article) to (li) {
@@ -1114,10 +1185,10 @@ As a web component author, I want to write a web component that transforms markd
       }
     }
   </style>
-  <h2>H2 outside shadow tree</h2>
+  <h2>H2 outside shadow tree (unstyled)</h2>
   <md-block-with-user-selectable-page-styles>
     <script type="text/markdown">
-      ## H2 from markdown
+      ## H2 from markdown (unstyled)
 
       - list item from markdown (thick dashed red) (from page @scope)
 
@@ -1148,6 +1219,19 @@ See user story "25 Inherit imported css file".
 
 ```html
 <body>
+    <script type="module">
+        import { MDBlock } from "./library/MDBlock.js";
+        import { CounterButton } from "./library/CounterButton.js";
+        customElements.define(
+            "md-block",
+            MDBlock
+        );
+        customElements.define(
+            "counter-button",
+            CounterButton
+        );
+    </script>
+
     <style>
         @import url(library/library.css) layer(library);
 
@@ -1160,13 +1244,13 @@ See user story "25 Inherit imported css file".
         }
 
         section {
-            border: thick solid red;
+            border: thick solid black;
         }
     </style>
     <section>
         Section outside shadow tree
-        <h2>H2 outside shadow tree</h2>
-        <button>button outside shadow tree</h2>
+        <h2>H2 outside shadow tree (thick dashed red)</h2>
+        <button>button outside shadow tree (thick ridge yellow)</h2>
     </section>
     <md-block>
         <script type="text/markdown">
@@ -1190,6 +1274,19 @@ Exemplar declarative component:
 
 ```html
 <body>
+    <script type="module">
+        import { MDBlock } from "./library/MDBlock.js";
+        import { CounterButton } from "./library/CounterButton.js";
+        customElements.define(
+            "md-block",
+            MDBlock
+        );
+        customElements.define(
+            "counter-button",
+            CounterButton
+        );
+    </script>
+
     <style>
         @import url(library/library.css) layer(library);
 
@@ -1207,8 +1304,8 @@ Exemplar declarative component:
     </style>
     <section>
         Section outside shadow tree
-        <h2>H2 outside shadow tree</h2>
-        <button>button outside shadow tree</h2>
+        <h2>H2 outside shadow tree (thick dashed red)</h2>
+        <button>button outside shadow tree (thick ridge yellow)</h2>
     </section>
     <section-container>
         <template shadowrootmode="open">
@@ -1239,6 +1336,19 @@ As a shadow-tree-based component library author or maintainer starting from the 
 
 ```html
 <body>
+    <script type="module">
+        import { MDBlock } from "./library/MDBlock.js";
+        import { CounterButton } from "./library/CounterButton.js";
+        customElements.define(
+            "md-block",
+            MDBlock
+        );
+        customElements.define(
+            "counter-button",
+            CounterButton
+        );
+    </script>
+
     <style>
         @import url(library/library.css) layer(library);
 
@@ -1268,8 +1378,8 @@ As a shadow-tree-based component library author or maintainer starting from the 
     </style>
     <section>
         Section outside shadow tree
-        <h2>H2 outside shadow tree</h2>
-        <button>button outside shadow tree</h2>
+        <h2>H2 outside shadow tree (thick dashed red)</h2>
+        <button>button outside shadow tree (thick ridge yellow)</h2>
     </section>
     <section-container>
         <template shadowrootmode="open">
@@ -1305,7 +1415,20 @@ As a shadow-tree-based component library author or maintainer starting from the 
 
 ```html
 <body>
-  <style>
+    <script type="module">
+        import { MDBlock } from "./library/MDBlock.js";
+        import { CounterButton } from "./library/CounterButton.js";
+        customElements.define(
+            "md-block",
+            MDBlock
+        );
+        customElements.define(
+            "counter-button",
+            CounterButton
+        );
+    </script>
+
+    <style>
         @import url(library/library.css) layer(library);
 
         @layer page-layer {
@@ -1324,13 +1447,13 @@ As a shadow-tree-based component library author or maintainer starting from the 
     </style>
     <section>
         Section outside shadow tree
-        <h2>H2 outside shadow tree</h2>
-        <button>button outside shadow tree</h2>
+        <h2>H2 outside shadow tree (thick dashed red)</h2>
+        <button>button outside shadow tree (thick ridged yellow)</h2>
     </section>
     <section-container>
         <template shadowrootmode="open">
             <style>
-              @layer inherit.page-layer.as.page-layer, inherit.library.as.library, library;
+                @layer inherit.page-layer.as.page-layer, inherit.library.as.library, library;
             </style>
             <section>
                 <slot></slot>
@@ -1345,7 +1468,6 @@ As a shadow-tree-based component library author or maintainer starting from the 
         </md-block>
         <counter-button></counter-button>
     </section-container>
-
 </body>
 ```
 

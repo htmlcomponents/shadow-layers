@@ -22,7 +22,7 @@
             <style>
                 @layer inherit.buttons;
             </style>
-            <button>Home</button>
+            <button>Home (thick solid blue) (from inherit.buttons)</button>
             <nav-bar>
                 <template shadowrootmode="open">
                     <style>
@@ -32,14 +32,15 @@
                             }
                         }
                     </style>
-                    <button>About</button>
+                    <button>About (thick dashed red) (from shadow layer buttons)</button>
                 </template>
             </nav-bar>
         </template>
     </header-container>
 
     <script type="module">
-        import ShadowLayers from '../ShadowLayers.js';
+        import ShadowLayers from "../ShadowLayers.js";
+        import { adoptStylesFromLayerStatementRule } from "../AdoptStyles.js";
 
         window.onload = function () {
 
@@ -47,7 +48,7 @@
 
             test(function () {
 
-                const inheritResult = ShadowLayers.inheritFromShadowStatementRule(document.querySelector(elName))
+                const inheritResult = adoptStylesFromLayerStatementRule(document.querySelector(elName))
                 assert_true(inheritResult, "inherit successfully returns");
 
                 const layerStatementResult = ShadowLayers.findLayerStatementRule(document.querySelector(elName))

@@ -1,5 +1,5 @@
 export default class ShadowLayers {
-  constructor() {}
+  // constructor() {}
 
   /**
    * Searches for a CSS rule with a given name

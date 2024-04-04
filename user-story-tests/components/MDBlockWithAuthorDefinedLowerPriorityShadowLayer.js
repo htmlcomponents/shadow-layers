@@ -5,7 +5,7 @@ import rehypeStringify from "https://esm.sh/rehype-stringify@10?bundle";
 import remarkFrontmatter from "https://esm.sh/remark-frontmatter@5?bundle";
 import remarkGfm from "https://esm.sh/remark-gfm@4?bundle";
 
-import ShadowLayers from "../../ShadowLayers.js";
+import { adoptStylesFromLayerStatementRule } from "../../AdoptStyles.js";
 
 export class MDBlockWithAuthorDefinedLowerPriorityShadowLayer extends HTMLElement {
   constructor() {
@@ -33,7 +33,7 @@ export class MDBlockWithAuthorDefinedLowerPriorityShadowLayer extends HTMLElemen
     `;
     shadow.innerHTML = shadowWithStyle;
 
-    const inheritResult = ShadowLayers.inheritFromShadowStatementRule(
+    const inheritResult = adoptStylesFromLayerStatementRule(
       document.querySelector(
         "md-block-with-author-defined-lower-priority-shadow-layer"
       )

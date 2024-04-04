@@ -14,7 +14,7 @@ export class WebComponentAllPageStylesLowPriority extends HTMLElement {
         }
     }
 </style>
-<button>Button in web-component-all-page-styles-low-priority</button>
+<button>Button in web-component-all-page-styles-low-priority (thick solid black) (from shadow layer buttons)</button>
     `;
   }
 }

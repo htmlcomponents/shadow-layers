@@ -41,8 +41,8 @@
     </style>
     <section>
         Section outside shadow tree
-        <h2>H2 outside shadow tree</h2>
-        <button>button outside shadow tree</h2>
+        <h2>H2 outside shadow tree (thick dashed red)</h2>
+        <button>button outside shadow tree (thick ridge yellow)</h2>
     </section>
     <md-block>
         <script type="text/markdown">
@@ -52,7 +52,7 @@
     <counter-button></counter-button>
 
     <script type="module">
-        import ShadowLayers from '../ShadowLayers.js';
+        import { adoptStylesFromLayerStatementRule } from "../AdoptStyles.js";
 
         window.onload = function () {
 

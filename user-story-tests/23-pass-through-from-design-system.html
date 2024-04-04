@@ -22,21 +22,20 @@
             }
         }
     </style>
-    <button>Button outside a shadow tree</button>
+    <button>Button outside a shadow tree (thick solid black)</button>
     <button-group>
         <template shadowrootmode="open">
             <style>
                 @layer inherit.design-system.as.design-system, design-system;
             </style>
             <button>
-                Button inside a shadow tree (thick dashed red) (styled from design
-                system layer)
+                Button inside a shadow tree (thick dashed red) (from inherit.design-system.as.design-system)
             </button>
         </template>
     </button-group>
 
     <script type="module">
-        import ShadowLayers from '../ShadowLayers.js';
+        import { adoptStylesFromLayerStatementRule } from "../AdoptStyles.js";
 
         window.onload = function () {
 
@@ -44,7 +43,7 @@
 
             test(function () {
 
-                const inheritResult = ShadowLayers.inheritFromShadowStatementRule(document.querySelector(elName))
+                const inheritResult = adoptStylesFromLayerStatementRule(document.querySelector(elName))
                 assert_true(inheritResult, "inherit found, so returns true");
             }, "Pass through from design system");
 

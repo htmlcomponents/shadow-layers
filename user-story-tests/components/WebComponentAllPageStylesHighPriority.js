@@ -14,7 +14,7 @@ export class WebComponentAllPageStylesHighPriority extends HTMLElement {
         }
     }
 </style>
-<button>Button in web-component-all-page-styles-low-priority</button>
+<button>Button in web-component-all-page-styles-high-priority (thick dashed red) (from inherit)</button>
     `;
   }
 }

@@ -41,8 +41,8 @@
     </style>
     <section>
         Section outside shadow tree
-        <h2>H2 outside shadow tree</h2>
-        <button>button outside shadow tree</h2>
+        <h2>H2 outside shadow tree (thick dashed red)</h2>
+        <button>button outside shadow tree (thick ridge yellow)</h2>
     </section>
     <section-container>
         <template shadowrootmode="open">
@@ -63,14 +63,14 @@
     </section-container>
 
     <script type="module">
-        import ShadowLayers from '../ShadowLayers.js';
+        import { adoptStylesFromLayerStatementRule } from "../AdoptStyles.js";
 
         window.onload = function () {
 
             test(function () {
 
                 const elName = "section-container"
-                const inheritResult = ShadowLayers.inheritFromShadowStatementRule(document.querySelector(elName))
+                const inheritResult = adoptStylesFromLayerStatementRule(document.querySelector(elName))
                 assert_true(inheritResult, "inherit found, so returns true");
 
             }, "component library with declarative and imperative components and page styles");

@@ -26,7 +26,7 @@
             }
         }
     </style>
-    <h2>H2 outside shadow tree</h2>
+    <h2>H2 outside shadow tree (thick dashed red)</h2>
     <md-block-with-user-selectable-page-styles>
         <script type="text/markdown">
 ## H2 from markdown (thick dashed red) (from page styles)
@@ -41,7 +41,7 @@
     </md-block-with-user-selectable-page-styles>
 
     <script type="module">
-        import ShadowLayers from '../ShadowLayers.js';
+        import { adoptStylesFromLayerStatementRule } from "../AdoptStyles.js";
 
         window.onload = function () {
 

@@ -6,7 +6,7 @@ export class WebComponentRejectsUserStyles extends HTMLElement {
   connectedCallback() {
     const shadow = this.attachShadow({ mode: "open" });
     shadow.innerHTML = `
-    <button>Web Component Rejects User Styles</button>
+    <button>Web Component Rejects User Styles (unstyled by web component)</button>
     `;
   }
 }

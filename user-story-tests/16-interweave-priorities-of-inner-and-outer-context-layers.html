@@ -24,7 +24,7 @@
             }
         }
     </style>
-    <button>Button outside a shadow tree</button>
+    <button>Button outside a shadow tree (unstyled)</button>
     <button-group>
         <template shadowrootmode="open">
             <style>
@@ -42,13 +42,13 @@
                     }
                 }
             </style>
-            <button class="a">Button a (inner has priority, thin dashed red)</button>
-            <button class="b">Button b (outer has priority, thick solid blue)</button>
+            <button class="a">Button a (thin dashed red) (inner A layer has priority)</button>
+            <button class="b">Button b (thick solid blue) (outer B layer has priority)</button>
         </template>
     </button-group>
 
     <script type="module">
-        import ShadowLayers from '../ShadowLayers.js';
+        import { adoptStylesFromLayerStatementRule } from "../AdoptStyles.js";
 
         window.onload = function () {
 
@@ -56,7 +56,7 @@
 
             test(function () {
 
-                const inheritResult = ShadowLayers.inheritFromShadowStatementRule(document.querySelector(elName))
+                const inheritResult = adoptStylesFromLayerStatementRule(document.querySelector(elName))
                 assert_true(inheritResult, "inherit found, so returns true");
             }, "Interweave priorities of outer and inner context layers");
 

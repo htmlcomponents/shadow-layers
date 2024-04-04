@@ -28,10 +28,10 @@
             }
         }
     </style>
-    <h2>H2 outside shadow tree</h2>
+    <h2>H2 outside shadow tree (unstyled)</h2>
     <md-block-with-user-selectable-page-styles>
         <script type="text/markdown">
-## H2 from markdown
+## H2 from markdown (unstyled)
 
 - list item from markdown (thick dashed red) (from page @scope)
 
@@ -45,7 +45,7 @@
     </md-block-with-user-selectable-page-styles>
 
     <script type="module">
-        import ShadowLayers from '../ShadowLayers.js';
+        import { adoptStylesFromLayerStatementRule } from "../AdoptStyles.js";
 
         window.onload = function () {
 

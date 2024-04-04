@@ -22,7 +22,7 @@
             }
         }
     </style>
-    <button>Button outside a shadow tree</button>
+    <button>Button outside a shadow tree (thick solid black)</button>
     <button-group>
         <template shadowrootmode="open">
             <style>
@@ -35,14 +35,13 @@
                 }
             </style>
             <button>
-                Button inside a shadow tree (thick solid black) (styled from unlayered
-                page styles)
+                Button inside a shadow tree (thick solid black) (from inherit.unlayered.as.unlayered)
             </button>
         </template>
     </button-group>
 
     <script type="module">
-        import ShadowLayers from '../ShadowLayers.js';
+        import { adoptStylesFromLayerStatementRule } from "../AdoptStyles.js";
 
         window.onload = function () {
 
@@ -50,7 +49,7 @@
 
             test(function () {
 
-                const inheritResult = ShadowLayers.inheritFromShadowStatementRule(document.querySelector(elName))
+                const inheritResult = adoptStylesFromLayerStatementRule(document.querySelector(elName))
                 assert_true(inheritResult, "inherit found, so returns true");
             }, "Inherit unlayered page styles as higher priority layer");
 

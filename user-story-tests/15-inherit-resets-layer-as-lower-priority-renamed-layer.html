@@ -18,7 +18,7 @@
             }
         }
     </style>
-    <button>Button outside a shadow tree</button>
+    <button>Button outside a shadow tree (thick dashed red)</button>
     <button-group>
         <template shadowrootmode="open">
             <style>
@@ -30,13 +30,13 @@
                     }
                 }
             </style>
-            <button>Button inside a shadow tree (thick solid black) (from shadow tree resets)</button>
+            <button>Button inside a shadow tree (thick solid black) (from shadow tree resets layer)</button>
         </template>
     </button-group>
 
 
     <script type="module">
-        import ShadowLayers from '../ShadowLayers.js';
+        import { adoptStylesFromLayerStatementRule } from "../AdoptStyles.js";
 
         window.onload = function () {
 
@@ -44,7 +44,7 @@
 
             test(function () {
 
-                const inheritResult = ShadowLayers.inheritFromShadowStatementRule(document.querySelector(elName))
+                const inheritResult = adoptStylesFromLayerStatementRule(document.querySelector(elName))
                 assert_true(inheritResult, "inherit found, so returns true");
             }, "Inherit resets layer as lower priority renamed layer");
 

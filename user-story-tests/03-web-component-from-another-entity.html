@@ -34,7 +34,8 @@
     </web-component-from-another-entity>
 
     <script type="module">
-        import ShadowLayers from '../ShadowLayers.js';
+        import ShadowLayers from "../ShadowLayers.js";
+        import { adoptStylesFromLayerStatementRule } from "../AdoptStyles.js";
 
         window.onload = function () {
 
@@ -42,7 +43,7 @@
 
             test(function () {
 
-                const inheritResult = ShadowLayers.inheritFromShadowStatementRule(document.querySelector(elName))
+                const inheritResult = adoptStylesFromLayerStatementRule(document.querySelector(elName))
                 assert_true(inheritResult, "inherit successfully returns");
 
                 const layerStatementResult = ShadowLayers.findLayerStatementRule(document.querySelector(elName))
