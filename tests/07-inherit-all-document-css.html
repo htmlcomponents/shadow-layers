@@ -71,6 +71,7 @@
 
     <script type="module">
         import ShadowLayers from '../ShadowLayers.js';
+        import { adoptStylesFromAttribute } from "../AdoptStyles.js";
 
         window.onload = function () {
 
@@ -83,7 +84,7 @@
 
             test(function () {
 
-                const inheritFromAttributeResult = ShadowLayers.inheritFromAttribute(document.querySelector(elName))
+                const inheritFromAttributeResult = adoptStylesFromAttribute(document.querySelector(elName))
                 assert_true(inheritFromAttributeResult, "inheritFromAttribute() successfully returns");
 
                 const layerStatementResult = ShadowLayers.findLayerStatementRule(document.querySelector(elName))
@@ -98,7 +99,7 @@
 
             test(function () {
 
-                const inheritFromAttributeResult = ShadowLayers.inheritFromAttribute(document.querySelector(elNameLowPriority))
+                const inheritFromAttributeResult = adoptStylesFromAttribute(document.querySelector(elNameLowPriority))
                 assert_true(inheritFromAttributeResult, "inheritFromAttribute() successfully returns");
 
                 const layerStatementResult = ShadowLayers.findLayerStatementRule(document.querySelector(elNameLowPriority))

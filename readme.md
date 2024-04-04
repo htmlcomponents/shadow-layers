@@ -182,15 +182,17 @@ For all of the above declarative parse locations, the format `inherit.<layerName
 
 Summarizing some tradeoffs for the 3 declarative locations:
 
-| Location              | Polyfillable? | Imperative? | User action not required? |
-| --------------------- | ------------- | ----------- | ------------------------- |
-| CSSLayerStatementRule | yes           | yes         | yes                       |
-| shadow host element   | yes           | no          | no                        |
-| template attribute    | no            | yes         | no                        |
+| Location              | Polyfillable? | Imperative? | User action not required? | Declarative & Imperative |
+| --------------------- | ------------- | ----------- | ------------------------- | ------------------------ |
+| CSSLayerStatementRule | yes           | yes         | yes                       | yes                      |
+| shadow host element   | yes           | no          | no                        | no                       |
+| template attribute    | no            | yes         | no                        | no                       |
 
 The column "Imperative?" means would the declarative format location be automatically parsed for imperatively created shadow trees (i.e. those created by attachShadow()) without an additional function or [necessary opt-in step](https://github.com/WICG/webcomponents/issues/909#issuecomment-1994686538).
 
 The column "User action not required" refers to the [discussion](https://github.com/WICG/webcomponents/issues/909#issuecomment-1936910846) and [consideration](https://github.com/WICG/webcomponents/issues/909#issuecomment-1951970599) of placing complexity and opt-in on the component author rather than the component user "... component user does not need to do absolutely anything ... the complexity and all the opt-in is within the component definition, which I think is essential for solving the use cases ...".
+
+The column "Declarative & Imperative?" means the mechanism works the same in either a declarative shadow DOM created shadow tree or in an imperatively created shadow tree with `attachShadow()`. See user story 27 "Markdown component with automatic page styles".
 
 ## Rationale
 
